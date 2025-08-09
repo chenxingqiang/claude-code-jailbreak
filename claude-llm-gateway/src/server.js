@@ -99,6 +99,11 @@ class ClaudeLLMGateway {
   extractApiKeys(providers) {
     const apiKeys = {};
     
+    if (!providers || typeof providers !== 'object') {
+      console.warn('⚠️  No providers configuration found');
+      return apiKeys;
+    }
+    
     for (const [name, config] of Object.entries(providers)) {
       if (config.enabled && config.requires_api_key) {
         const envVar = this.getApiKeyEnvVar(name);

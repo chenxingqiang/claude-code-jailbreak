@@ -1,6 +1,6 @@
 {
   "name": "claude-llm-gateway",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "🧠 Intelligent API gateway with automatic model selection - connects Claude Code to 36+ LLM providers with smart task detection and cost optimization",
   "main": "index.js",
   "bin": {
