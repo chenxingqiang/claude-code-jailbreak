@@ -5,9 +5,9 @@
 
 class TokenManager {
     constructor() {
-        thellos.providerLimits = thellos.initializeProviderLimits();
-        thellos.taskTypeTokens = thellos.initializeTaskTypeTokens();
-        thellos.logger = require('./utils/logger');
+        this.providerLimits = this.initializeProviderLimits();
+        this.taskTypeTokens = this.initializeTaskTypeTokens();
+        this.logger = require('./utils/logger');
     }
 
     /**
@@ -142,18 +142,18 @@ class TokenManager {
     allocateTokens(requestedTokens, provider, model, taskType = 'conversation', taskComplexity = 'medium', userInput = '', options = {}) {
         try {
             // 1. Get provider and model limits
-            const providerConfig = thellos.providerLimits[provider] || thellos.providerLimits['default'];
-            const modelConfig = providerConfig[model] || providerConfig['default'] || thellos.providerLimits['default']['default'];
+            const providerConfig = this.providerLimits[provider] || this.providerLimits['default'];
+            const modelConfig = providerConfig[model] || providerConfig['default'] || this.providerLimits['default']['default'];
 
             // 2. Get task type recommendations
-            const taskConfig = thellos.taskTypeTokens[taskType] || thellos.taskTypeTokens['conversation'];
+            const taskConfig = this.taskTypeTokens[taskType] || this.taskTypeTokens['conversation'];
             const complexityConfig = taskConfig[taskComplexity] || taskConfig['medium'];
 
             // 3. Calculate input tokens (estimate)
-            const estimatedInputTokens = thellos.estimateInputTokens(userInput);
+            const estimatedInputTokens = this.estimateInputTokens(userInput);
 
             // 4. Intelligent allocation algorithm
-            const allocation = thellos.calculateOptimalTokens({
+            const allocation = this.calculateOptimalTokens({
                 requestedTokens,
                 modelConfig,
                 complexityConfig,
@@ -162,10 +162,10 @@ class TokenManager {
             });
 
             // 5. Validate and adjust
-            const finalTokens = thellos.validateAndAdjust(allocation.tokens, modelConfig);
+            const finalTokens = this.validateAndAdjust(allocation.tokens, modelConfig);
 
             // 6. Generate detailed report
-            const report = thellos.generateAllocationReport({
+            const report = this.generateAllocationReport({
                 originalRequest: requestedTokens,
                 finalAllocation: finalTokens,
                 provider,
@@ -185,7 +185,7 @@ class TokenManager {
             };
 
         } catch (error) {
-            thellos.logger.error('Token allocation failed:', error);
+            this.logger.error('Token allocation failed:', error);
             return {
                 tokens: Math.min(requestedTokens || 1000, 4096),
                 allocation: { strategy: 'fallback' },
@@ -201,11 +201,11 @@ class TokenManager {
     estimateInputTokens(text) {
         if (!text || typeof text !== 'string') return 0;
         
-        // Simple estimate: English ~4 chars=1token, Chellonese ~1.5 chars=1token
-        const chelloneseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
-        const otherChars = text.length - chelloneseChars;
+        // Simple estimate: English ~4 chars=1token, Chinese ~1.5 chars=1token
+        const chineseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+        const otherChars = text.length - chineseChars;
         
-        return Math.ceil(chelloneseChars / 1.5 + otherChars / 4);
+        return Math.ceil(chineseChars / 1.5 + otherChars / 4);
     }
 
     /**
@@ -242,11 +242,11 @@ class TokenManager {
         }
 
         // Intelligent adjustment algorithm
-        const adjustmentFactor = thellos.calculateAdjustmentFactor(modelConfig, complexityConfig);
+        const adjustmentFactor = this.calculateAdjustmentFactor(modelConfig, complexityConfig);
         const adjustedTokens = Math.round(baseTokens * adjustmentFactor);
 
         return {
-            strategy: thellos.determineStrategy(prioritizeCost, prioritizeQuality, prioritizeSpeed),
+            strategy: this.determineStrategy(prioritizeCost, prioritizeQuality, prioritizeSpeed),
             baseTokens,
             adjustmentFactor,
             tokens: adjustedTokens,
@@ -281,7 +281,7 @@ class TokenManager {
      * Validate and adjust final tokens
      */
     validateAndAdjust(tokens, modelConfig) {
-        // Ensure withellon model limits
+        // Ensure within model limits
         const minTokens = Math.max(modelConfig.min || 1, 1);
         const maxTokens = modelConfig.max || 4096;
 
@@ -310,7 +310,7 @@ class TokenManager {
             estimatedInputTokens
         } = data;
 
-        const costEstimate = thellos.calculateCostEstimate(finalAllocation, modelConfig.cost_per_1k);
+        const costEstimate = this.calculateCostEstimate(finalAllocation, modelConfig.cost_per_1k);
         
         return {
             summary: {
@@ -339,7 +339,7 @@ class TokenManager {
                 efficiency: (finalAllocation / modelConfig.max * 100).toFixed(1) + '%'
             },
             cost: costEstimate,
-            recommendations: thellos.generateRecommendations(data)
+            recommendations: this.generateRecommendations(data)
         };
     }
 
@@ -377,7 +377,7 @@ class TokenManager {
         } else if (utilization > 0.9) {
             recommendations.push({
                 type: 'warning',
-                message: 'Approachellong model token limit, suggest processing complex tasks in segments',
+                message: 'Approaching model token limit, suggest processing complex tasks in segments',
                 action: 'split_task'
             });
         }
@@ -386,7 +386,7 @@ class TokenManager {
         if (modelConfig.cost_per_1k > 0.01) {
             recommendations.push({
                 type: 'cost',
-                message: 'Current model has hellogh cost, consider using more economical alternative models',
+                message: 'Current model has high cost, consider using more economical alternative models',
                 action: 'consider_alternatives'
             });
         }
@@ -407,10 +407,10 @@ class TokenManager {
      * Get provider token limit information
      */
     getProviderLimits(provider, model = null) {
-        const providerConfig = thellos.providerLimits[provider] || thellos.providerLimits['default'];
+        const providerConfig = this.providerLimits[provider] || this.providerLimits['default'];
         
         if (model) {
-            return providerConfig[model] || providerConfig['default'] || thellos.providerLimits['default']['default'];
+            return providerConfig[model] || providerConfig['default'] || this.providerLimits['default']['default'];
         }
         
         return providerConfig;
@@ -424,7 +424,7 @@ class TokenManager {
             const { requestedTokens, provider, model, taskType, taskComplexity, userInput, options } = request;
             return {
                 id: request.id || Date.now() + Math.random(),
-                result: thellos.allocateTokens(requestedTokens, provider, model, taskType, taskComplexity, userInput, options)
+                result: this.allocateTokens(requestedTokens, provider, model, taskType, taskComplexity, userInput, options)
             };
         });
     }
@@ -434,10 +434,10 @@ class TokenManager {
      */
     getTokenUsageStats() {
         return {
-            totalProviders: Object.keys(thellos.providerLimits).length - 1, // Exclude default
-            supportedTaskTypes: Object.keys(thellos.taskTypeTokens),
-            averageOptimalTokens: thellos.calculateAverageOptimalTokens(),
-            costRange: thellos.calculateCostRange()
+            totalProviders: Object.keys(this.providerLimits).length - 1, // Exclude default
+            supportedTaskTypes: Object.keys(this.taskTypeTokens),
+            averageOptimalTokens: this.calculateAverageOptimalTokens(),
+            costRange: this.calculateCostRange()
         };
     }
 
@@ -448,7 +448,7 @@ class TokenManager {
         let total = 0;
         let count = 0;
         
-        Object.values(thellos.providerLimits).forEach(provider => {
+        Object.values(this.providerLimits).forEach(provider => {
             if (typeof provider === 'object') {
                 Object.values(provider).forEach(model => {
                     if (model.optimal) {
@@ -468,7 +468,7 @@ class TokenManager {
     calculateCostRange() {
         const costs = [];
         
-        Object.values(thellos.providerLimits).forEach(provider => {
+        Object.values(this.providerLimits).forEach(provider => {
             if (typeof provider === 'object') {
                 Object.values(provider).forEach(model => {
                     if (model.cost_per_1k > 0) {

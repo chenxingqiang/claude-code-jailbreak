@@ -1,8 +1,8 @@
 {
-  "generated_at": "2025-08-09T10:07:04.491Z",
+  "generated_at": "2025-08-09T12:10:34.017Z",
   "llm_interface_version": "2.0.1495",
   "total_providers": 36,
-  "enabled_providers": 7,
+  "enabled_providers": 8,
   "providers": {
     "openai": {
       "enabled": true,
@@ -23,7 +23,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.466Z"
+      "last_updated": "2025-08-09T12:10:34.006Z"
     },
     "anthropic": {
       "enabled": true,
@@ -42,7 +42,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.467Z"
+      "last_updated": "2025-08-09T12:10:34.006Z"
     },
     "google": {
       "enabled": true,
@@ -62,7 +62,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.467Z"
+      "last_updated": "2025-08-09T12:10:34.006Z"
     },
     "cohere": {
       "enabled": false,
@@ -82,7 +82,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.467Z"
+      "last_updated": "2025-08-09T12:10:34.006Z"
     },
     "huggingface": {
       "enabled": false,
@@ -100,7 +100,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": false,
-      "last_updated": "2025-08-09T10:07:04.467Z"
+      "last_updated": "2025-08-09T12:10:34.006Z"
     },
     "ollama": {
       "enabled": {},
@@ -129,10 +129,10 @@
       "requires_api_key": false,
       "local": true,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.489Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "mistral": {
-      "enabled": false,
+      "enabled": true,
       "priority": 7,
       "models": [
         "mistral-large",
@@ -148,7 +148,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "groq": {
       "enabled": true,
@@ -166,7 +166,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "perplexity": {
       "enabled": false,
@@ -186,7 +186,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "ai21": {
       "enabled": false,
@@ -205,7 +205,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "nvidia": {
       "enabled": false,
@@ -223,7 +223,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "fireworks": {
       "enabled": false,
@@ -242,7 +242,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "together": {
       "enabled": false,
@@ -261,7 +261,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "anyscale": {
       "enabled": false,
@@ -280,7 +280,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "deepseek": {
       "enabled": true,
@@ -298,7 +298,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "replicate": {
       "enabled": false,
@@ -317,7 +317,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "gooseai": {
       "enabled": false,
@@ -334,7 +334,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "forefront": {
       "enabled": false,
@@ -351,7 +351,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "writer": {
       "enabled": false,
@@ -368,7 +368,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "neets": {
       "enabled": false,
@@ -385,7 +385,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "lamini": {
       "enabled": false,
@@ -402,7 +402,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "hyperbee": {
       "enabled": false,
@@ -419,7 +419,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "novita": {
       "enabled": false,
@@ -436,7 +436,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "shuttle": {
       "enabled": false,
@@ -453,7 +453,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "theb": {
       "enabled": false,
@@ -470,7 +470,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "corcel": {
       "enabled": false,
@@ -487,7 +487,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "aimlapi": {
       "enabled": false,
@@ -504,7 +504,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "ailayer": {
       "enabled": false,
@@ -521,7 +521,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.016Z"
     },
     "monster": {
       "enabled": false,
@@ -538,7 +538,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "deepinfra": {
       "enabled": false,
@@ -555,7 +555,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "friendliai": {
       "enabled": false,
@@ -572,7 +572,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "reka": {
       "enabled": false,
@@ -589,7 +589,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "voyage": {
       "enabled": false,
@@ -606,7 +606,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "watsonx": {
       "enabled": false,
@@ -623,9 +623,9 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
-    "zhipu": {
+    "zhellopu": {
       "enabled": false,
       "priority": 10,
       "models": [
@@ -640,7 +640,7 @@
       "requires_api_key": true,
       "local": false,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     },
     "llamacpp": {
       "enabled": {},
@@ -659,7 +659,7 @@
       "requires_api_key": false,
       "local": true,
       "streaming_support": true,
-      "last_updated": "2025-08-09T10:07:04.490Z"
+      "last_updated": "2025-08-09T12:10:34.017Z"
     }
   }
 }

@@ -3,6 +3,282 @@ let providers = {};
 let stats = {};
 let modelStats = {};
 let logs = [];
+let currentLanguage = localStorage.getItem('language') || 'zh';
+
+// Internationalization (i18n) texts
+const i18n = {
+    zh: {
+        // Navigation tabs
+        providers: 'Provider 管理',
+        configuration: '配置',
+        apiEndpoints: 'API 端点',
+        intelligentSelection: '智能选择',
+        realTimeLogs: '实时日志',
+        
+        // Provider Management
+        providerConfiguration: 'Provider 配置',
+        testAll: '测试全部',
+        addProvider: '添加 Provider',
+        configure: '配置',
+        test: '测试',
+        healthy: '健康',
+        unhealthy: '不健康',
+        noApiKey: '无API密钥',
+        unreachable: '不可达',
+        rateLimited: '频率限制',
+        
+        // Configuration
+        environmentVariables: '环境变量',
+        gatewaySettings: '网关设置',
+        saveSettings: '保存设置',
+        
+        // Model Stats
+        modelPerformanceStats: '模型性能统计',
+        modelCapabilityMatrix: '模型能力矩阵',
+        noPerformanceData: '暂无性能数据，需要一些API调用后才会显示性能统计信息',
+        noModelCapabilityData: '暂无模型能力数据',
+        strengths: '优势',
+        weaknesses: '弱势',
+        speed: '速度',
+        cost: '成本',
+        quality: '质量',
+        successRate: '成功率',
+        responseTime: '响应时间',
+        
+        // API Info
+        gatewayServiceUrls: '网关服务 URLs',
+        claudeApiEndpoints: 'Claude API 端点',
+        serviceUrl: '服务 URL',
+        healthCheck: '健康检查',
+        providersStatus: 'Providers 状态',
+        configurationEndpoint: '配置端点',
+        
+        // Logs
+        clearLogs: '清除日志',
+        
+        // Notifications
+        testing: '正在测试',
+        testingAllProviders: '正在测试所有提供者...',
+        testSuccess: '测试成功',
+        testFailed: '测试失败',
+        allProvidersTestComplete: '所有提供者测试完成',
+        batchTestFailed: '批量测试失败',
+        configureProvider: '请在配置标签页中配置',
+        apiKey: '的API密钥',
+        
+        // Common
+        save: '保存',
+        cancel: '取消',
+        close: '关闭',
+        loading: '加载中...',
+        error: '错误',
+        success: '成功',
+        warning: '警告',
+        info: '信息',
+        refreshStatus: '刷新状态',
+        requestCount: '请求数',
+        responseTime: '响应时间',
+        costPer1KTokens: '成本/1K tokens',
+        models: '模型',
+        noModels: '无模型',
+        moreModels: '个',
+        
+        // Capability translations
+        coding: '编程',
+        analysis: '分析',
+        creative: '创作',
+        translation: '翻译',
+        conversation: '对话',
+        reasoning: '推理',
+        multimodal: '多模态',
+        long_context: '长文本',
+        chinese: '中文',
+        multilingual: '多语言',
+        retrieval: '检索',
+        humor: '幽默',
+        
+        // Speed translations
+        very_fast: '非常快',
+        fast: '快',
+        medium: '中等',
+        slow: '慢',
+        
+        // Cost translations
+        very_low: '非常低',
+        low: '低',
+        high: '高',
+        very_high: '非常高',
+        
+        // Quality translations
+        very_high: '非常高',
+        high: '高'
+    },
+    en: {
+        // Navigation tabs
+        providers: 'Provider Management',
+        configuration: 'Configuration',
+        apiEndpoints: 'API Endpoints',
+        intelligentSelection: 'Intelligent Selection',
+        realTimeLogs: 'Real-time Logs',
+        
+        // Provider Management
+        providerConfiguration: 'Provider Configuration',
+        testAll: 'Test All',
+        addProvider: 'Add Provider',
+        configure: 'Configure',
+        test: 'Test',
+        healthy: 'Healthy',
+        unhealthy: 'Unhealthy',
+        noApiKey: 'No API Key',
+        unreachable: 'Unreachable',
+        rateLimited: 'Rate Limited',
+        
+        // Configuration
+        environmentVariables: 'Environment Variables',
+        gatewaySettings: 'Gateway Settings',
+        saveSettings: 'Save Settings',
+        
+        // Model Stats
+        modelPerformanceStats: 'Model Performance Statistics',
+        modelCapabilityMatrix: 'Model Capability Matrix',
+        noPerformanceData: 'No performance data available. Statistics will be displayed after some API calls.',
+        noModelCapabilityData: 'No model capability data available',
+        strengths: 'Strengths',
+        weaknesses: 'Weaknesses',
+        speed: 'Speed',
+        cost: 'Cost',
+        quality: 'Quality',
+        successRate: 'Success Rate',
+        responseTime: 'Response Time',
+        
+        // API Info
+        gatewayServiceUrls: 'Gateway Service URLs',
+        claudeApiEndpoints: 'Claude API Endpoints',
+        serviceUrl: 'Service URL',
+        healthCheck: 'Health Check',
+        providersStatus: 'Providers Status',
+        configurationEndpoint: 'Configuration',
+        
+        // Logs
+        clearLogs: 'Clear Logs',
+        
+        // Notifications
+        testing: 'Testing',
+        testingAllProviders: 'Testing all providers...',
+        testSuccess: 'Test successful',
+        testFailed: 'Test failed',
+        allProvidersTestComplete: 'All providers test complete',
+        batchTestFailed: 'Batch test failed',
+        configureProvider: 'Please configure',
+        apiKey: 'API key in the configuration tab',
+        
+        // Common
+        save: 'Save',
+        cancel: 'Cancel',
+        close: 'Close',
+        loading: 'Loading...',
+        error: 'Error',
+        success: 'Success',
+        warning: 'Warning',
+        info: 'Info',
+        refreshStatus: 'Refresh Status',
+        requestCount: 'Requests',
+        responseTime: 'Response Time',
+        costPer1KTokens: 'Cost/1K tokens',
+        models: 'Models',
+        noModels: 'No Models',
+        moreModels: ' more',
+        
+        // Capability translations
+        coding: 'Coding',
+        analysis: 'Analysis',
+        creative: 'Creative',
+        translation: 'Translation',
+        conversation: 'Conversation',
+        reasoning: 'Reasoning',
+        multimodal: 'Multimodal',
+        long_context: 'Long Context',
+        chinese: 'Chinese',
+        multilingual: 'Multilingual',
+        retrieval: 'Retrieval',
+        humor: 'Humor',
+        
+        // Speed translations
+        very_fast: 'Very Fast',
+        fast: 'Fast',
+        medium: 'Medium',
+        slow: 'Slow',
+        
+        // Cost translations
+        very_low: 'Very Low',
+        low: 'Low',
+        high: 'High',
+        very_high: 'Very High',
+        
+        // Quality translations
+        very_high: 'Very High',
+        high: 'High'
+    }
+};
+
+// Get translated text
+function t(key) {
+    const keys = key.split('.');
+    let value = i18n[currentLanguage];
+    for (const k of keys) {
+        value = value && value[k];
+    }
+    return value || key;
+}
+
+// Language switching function
+function switchLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    updateLanguageButtons();
+    updateLanguageDisplay();
+    loadDashboard(); // Reload to apply translations
+}
+
+// Update language display
+function updateLanguageDisplay() {
+    // Update all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.textContent = t(key);
+    });
+    
+    // Force re-render of current tab content
+    const activeTab = document.querySelector('.tab-button.active');
+    if (activeTab) {
+        const tabName = activeTab.id.replace('-tab', '');
+        if (tabName === 'models') {
+            renderModelStats();
+        } else if (tabName === 'config') {
+            renderEnvironmentVariables();
+        } else if (tabName === 'api-info') {
+            loadApiInfo();
+        }
+    }
+    
+    renderProviders(); // Re-render providers with new language
+}
+
+// Update language buttons state
+function updateLanguageButtons() {
+    // Reset all buttons
+    document.querySelectorAll('#lang-zh, #lang-en').forEach(btn => {
+        btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+        btn.classList.add('text-gray-500', 'hover:text-gray-700');
+    });
+    
+    // Highlight current language
+    const activeBtn = document.getElementById(`lang-${currentLanguage}`);
+    if (activeBtn) {
+        activeBtn.classList.remove('text-gray-500', 'hover:text-gray-700');
+        activeBtn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+    }
+}
 
 // Environment variables configuration
 const envVariableConfigs = {
@@ -34,6 +310,22 @@ const envVariableConfigs = {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
+    
+    // Add global error handler
+    window.addEventListener('error', function(e) {
+        console.error('Global JavaScript error:', e.error);
+    });
+    
+    // Test if functions are available globally
+    console.log('testAllProviders function available:', typeof testAllProviders);
+    console.log('configureProvider function available:', typeof configureProvider);
+    console.log('showTab function available:', typeof showTab);
+    
+    // Initialize language
+    updateLanguageDisplay();
+    updateLanguageButtons();
+    
     loadDashboard();
     setInterval(loadDashboard, 30000); // Refresh every 30 seconds
 });
@@ -146,12 +438,12 @@ function createProviderCard(name, provider) {
     div.className = 'provider-card bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow';
 
     const statusClass = provider.healthy ? 'healthy' : 'unhealthy';
-    const statusText = provider.healthy ? '健康' : '不健康';
+    const statusText = provider.healthy ? t('healthy') : t('unhealthy');
     const statusIcon = provider.healthy ? 'fas fa-check-circle text-green-500' : 'fas fa-exclamation-circle text-red-500';
 
     const priorityBadge = getPriorityBadge(provider.priority);
-    const modelsList = provider.models ? provider.models.slice(0, 3).join(', ') : '无模型';
-    const moreModels = provider.models && provider.models.length > 3 ? ` +${provider.models.length - 3}个` : '';
+    const modelsList = provider.models ? provider.models.slice(0, 3).join(', ') : t('noModels');
+    const moreModels = provider.models && provider.models.length > 3 ? ` +${provider.models.length - 3}${t('moreModels')}` : '';
 
     div.innerHTML = `
         <div class="flex items-center justify-between mb-4">
@@ -179,19 +471,19 @@ function createProviderCard(name, provider) {
 
         <div class="space-y-2 text-sm text-gray-600">
             <div class="flex justify-between">
-                <span>请求数:</span>
+                <span>${t('requestCount')}:</span>
                 <span class="font-medium">${provider.request_count || 0}</span>
             </div>
             <div class="flex justify-between">
-                <span>响应时间:</span>
+                <span>${t('responseTime')}:</span>
                 <span class="font-medium">${provider.response_time || 'N/A'}</span>
             </div>
             <div class="flex justify-between">
-                <span>成本/1K tokens:</span>
+                <span>${t('costPer1KTokens')}:</span>
                 <span class="font-medium">$${(provider.cost_per_1k_tokens || 0).toFixed(4)}</span>
             </div>
             <div class="mt-3">
-                <span class="text-xs font-medium text-gray-500">模型:</span>
+                <span class="text-xs font-medium text-gray-500">${t('models')}:</span>
                 <p class="text-xs text-gray-600 mt-1">${modelsList}${moreModels}</p>
             </div>
         </div>
@@ -199,11 +491,11 @@ function createProviderCard(name, provider) {
         <div class="mt-4 flex space-x-2">
             <button onclick="testProvider('${name}')" 
                     class="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded text-sm font-medium">
-                <i class="fas fa-flask mr-1"></i>测试
+                <i class="fas fa-flask mr-1"></i>${t('test')}
             </button>
             <button onclick="configureProvider('${name}')" 
                     class="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded text-sm font-medium">
-                <i class="fas fa-cog mr-1"></i>配置
+                <i class="fas fa-cog mr-1"></i>${t('configure')}
             </button>
         </div>
 
@@ -236,56 +528,95 @@ function getPriorityBadge(priority) {
 
 function renderModelStats() {
     const container = document.getElementById('model-stats');
-    if (!container || !modelStats.capabilities) return;
+    if (!container) return;
 
     container.innerHTML = '';
 
     // Performance stats
     const perfDiv = document.createElement('div');
-    perfDiv.innerHTML = `
-        <h3 class="text-lg font-medium text-gray-900 mb-4">模型性能统计</h3>
-        <div class="space-y-3">
-            ${Object.entries(modelStats.performance || {}).map(([model, perf]) => `
-                <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
-                    <span class="font-medium">${model}</span>
-                    <div class="text-sm text-gray-600">
-                        成功率: ${perf.successRate} | 响应时间: ${perf.avgResponseTime}
+    const perfEntries = Object.entries(modelStats.performance || {});
+    
+    if (perfEntries.length > 0) {
+        perfDiv.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-900 mb-4">📊 ${t('modelPerformanceStats')}</h3>
+            <div class="space-y-3">
+                ${perfEntries.map(([model, perf]) => `
+                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                        <span class="font-medium">${model}</span>
+                        <div class="text-sm text-gray-600">
+                            ${t('successRate')}: ${perf.successRate} | ${t('responseTime')}: ${perf.avgResponseTime}
+                        </div>
                     </div>
+                `).join('')}
+            </div>
+        `;
+    } else {
+        perfDiv.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-900 mb-4">📊 ${t('modelPerformanceStats')}</h3>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    <span class="text-blue-700">${t('noPerformanceData')}</span>
                 </div>
-            `).join('')}
-        </div>
-    `;
+            </div>
+        `;
+    }
 
     // Capabilities
     const capDiv = document.createElement('div');
-    capDiv.innerHTML = `
-        <h3 class="text-lg font-medium text-gray-900 mb-4">模型能力矩阵</h3>
-        <div class="space-y-3">
-            ${Object.entries(modelStats.capabilities).map(([model, caps]) => `
-                <div class="p-4 border border-gray-200 rounded-lg">
-                    <div class="font-medium text-gray-900 mb-2">${model}</div>
-                    <div class="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                            <span class="text-gray-500">优势:</span>
-                            <span class="ml-2 text-green-600">${caps.strengths.join(', ')}</span>
+    if (modelStats.capabilities && Object.keys(modelStats.capabilities).length > 0) {
+        capDiv.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-900 mb-4">🧠 ${t('modelCapabilityMatrix')}</h3>
+            <div class="space-y-3">
+                ${Object.entries(modelStats.capabilities).map(([model, caps]) => `
+                    <div class="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="font-medium text-gray-900">${model}</div>
+                            <div class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium">
+                                ${caps.baseScore}/100
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-gray-500">基础分数:</span>
-                            <span class="ml-2 font-medium">${caps.baseScore}</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">速度:</span>
-                            <span class="ml-2">${caps.speed}</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-500">成本:</span>
-                            <span class="ml-2">${caps.cost}</span>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-500">✅ ${t('strengths')}:</span>
+                                <div class="ml-2 text-green-600 mt-1">
+                                    ${caps.strengths.map(s => `<span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs mr-1 mb-1">${t(s) || s}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">❌ ${t('weaknesses')}:</span>
+                                <div class="ml-2 text-red-600 mt-1">
+                                    ${caps.weaknesses.map(w => `<span class="inline-block bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs mr-1 mb-1">${t(w) || w}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">⚡ ${t('speed')}:</span>
+                                <span class="ml-2">${t(caps.speed) || caps.speed}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">💰 ${t('cost')}:</span>
+                                <span class="ml-2">${t(caps.cost) || caps.cost}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">🎯 ${t('quality')}:</span>
+                                <span class="ml-2">${t(caps.quality) || caps.quality}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('')}
+                `).join('')}
         </div>
     `;
+    } else {
+        capDiv.innerHTML = `
+            <h3 class="text-lg font-medium text-gray-900 mb-4">🧠 ${t('modelCapabilityMatrix')}</h3>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-gray-500 mr-2"></i>
+                    <span class="text-gray-600">${t('noModelCapabilityData')}</span>
+                </div>
+            </div>
+        `;
+    }
 
     container.appendChild(perfDiv);
     container.appendChild(capDiv);
@@ -296,7 +627,7 @@ function renderEnvironmentVariables() {
     if (!container) return;
 
     container.innerHTML = Object.entries(envVariableConfigs).map(([key, config]) => `
-        <div class="space-y-2">
+        <div class="space-y-2" data-env-key="${key}">
             <label class="block text-sm font-medium text-gray-700">${config.label}</label>
             <div class="flex space-x-2">
                 <input type="${config.type}" 
@@ -304,7 +635,8 @@ function renderEnvironmentVariables() {
                        placeholder="输入${config.label}..."
                        class="api-key-input flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
                 <button onclick="testEnvVariable('${key}')" 
-                        class="bg-green-50 hover:bg-green-100 text-green-700 px-3 py-2 rounded text-sm">
+                        class="bg-green-50 hover:bg-green-100 text-green-700 px-3 py-2 rounded text-sm" 
+                        title="测试此API密钥">
                     <i class="fas fa-flask"></i>
                 </button>
             </div>
@@ -338,6 +670,8 @@ function showTab(tabName) {
         renderEnvironmentVariables();
     } else if (tabName === 'api-info') {
         loadApiInfo();
+    } else if (tabName === 'models') {
+        renderModelStats();
     } else if (tabName === 'logs') {
         startLogStreaming();
     }
@@ -385,7 +719,7 @@ async function toggleProvider(name, enabled) {
 }
 
 async function testProvider(name) {
-    showNotification(`正在测试 ${name}...`, 'info');
+    showNotification(`${t('testing')} ${name}...`, 'info');
     
     try {
         const response = await apiRequest(`/providers/${name}/test`, {
@@ -393,35 +727,70 @@ async function testProvider(name) {
         });
         
         if (response.success) {
-            showNotification(`${name} 测试成功`, 'success');
+            showNotification(`${name} ${t('testSuccess')}`, 'success');
         } else {
-            showNotification(`${name} 测试失败: ${response.error}`, 'error');
+            showNotification(`${name} ${t('testFailed')}: ${response.error}`, 'error');
         }
         
         loadDashboard();
     } catch (error) {
-        showNotification(`${name} 测试失败`, 'error');
+        showNotification(`${name} ${t('testFailed')}`, 'error');
     }
 }
 
 async function testAllProviders() {
-    showNotification('正在测试所有提供者...', 'info');
+    console.log('testAllProviders called');
+    showNotification(t('testingAllProviders'), 'info');
     
     try {
+        console.log('Making API request to /providers/test-all');
         const response = await apiRequest('/providers/test-all', {
             method: 'POST'
         });
+        console.log('API response:', response);
         
-        showNotification('所有提供者测试完成', 'success');
+        showNotification(t('allProvidersTestComplete'), 'success');
         loadDashboard();
     } catch (error) {
-        showNotification('批量测试失败', 'error');
+        console.error('testAllProviders error:', error);
+        showNotification(`${t('batchTestFailed')}: ${error.message}`, 'error');
     }
 }
 
 function configureProvider(name) {
-    // This would open a detailed configuration modal
-    showNotification(`打开 ${name} 配置面板 (功能开发中)`, 'info');
+    console.log('configureProvider called for:', name);
+    
+    // Switch to config tab
+    showTab('config');
+    
+    // Show notification about where to configure
+    showNotification(`${t('configureProvider')} ${name} ${t('apiKey')}`, 'info');
+    
+    // Scroll to the relevant environment variable if it exists
+    const envKeyMap = {
+        'openai': 'OPENAI_API_KEY',
+        'anthropic': 'ANTHROPIC_API_KEY', 
+        'google': 'GOOGLE_API_KEY',
+        'groq': 'GROQ_API_KEY',
+        'mistral': 'MISTRAL_API_KEY',
+        'deepseek': 'DEEPSEEK_API_KEY',
+        'huggingface': 'HUGGINGFACE_TOKEN',
+        'cohere': 'COHERE_API_KEY'
+    };
+    
+    const envKey = envKeyMap[name];
+    if (envKey) {
+        setTimeout(() => {
+            const element = document.querySelector(`[data-env-key="${envKey}"]`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.style.backgroundColor = '#fef3c7';
+                setTimeout(() => {
+                    element.style.backgroundColor = '';
+                }, 3000);
+            }
+        }, 500);
+    }
 }
 
 // Modal functions

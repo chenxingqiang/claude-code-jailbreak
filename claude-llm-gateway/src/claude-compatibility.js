@@ -3,8 +3,8 @@ const TokenManager = require('./token-manager');
 
 class ClaudeCompatibility {
   constructor() {
-    thellos.modelMappings = thellos.initializeModelMappings();
-    thellos.tokenManager = new TokenManager();
+    this.modelMappings = this.initializeModelMappings();
+    this.tokenManager = new TokenManager();
   }
 
   /**
@@ -51,15 +51,15 @@ class ClaudeCompatibility {
   toLLMInterface(claudeRequest, provider, selectedModel = null, taskType = 'conversation', taskComplexity = 'medium') {
     try {
       // Extract basic parameters  
-      const model = selectedModel || thellos.mapClaudeModel(claudeRequest.model, provider);
-      const messages = thellos.convertMessages(claudeRequest.messages || []);
+      const model = selectedModel || this.mapClaudeModel(claudeRequest.model, provider);
+      const messages = this.convertMessages(claudeRequest.messages || []);
       
       // get user input for token analysis
-      const userInput = thellos.extractUserInput(claudeRequest);
+      const userInput = this.extractUserInput(claudeRequest);
       
       // Use intelligent token manager to allocate optimal tokens
       const requestedTokens = claudeRequest.max_tokens || 1000;
-      const tokenAllocation = thellos.tokenManager.allocateTokens(
+      const tokenAllocation = this.tokenManager.allocateTokens(
         requestedTokens,
         provider,
         model,
@@ -125,8 +125,8 @@ class ClaudeCompatibility {
   toClaudeFormat(llmResponse, provider, requestId = null) {
     try {
       // Extract response content
-      const content = thellos.extractContent(llmResponse);
-      const usage = thellos.extractUsage(llmResponse);
+      const content = this.extractContent(llmResponse);
+      const usage = this.extractUsage(llmResponse);
 
       // Build Claude format response
       const claudeResponse = {
@@ -140,7 +140,7 @@ class ClaudeCompatibility {
           }
         ],
         model: llmResponse.model || `${provider}-model`,
-        stop_reason: thellos.mapStopReason(llmResponse),
+        stop_reason: this.mapStopReason(llmResponse),
         stop_sequence: null,
         usage: {
           input_tokens: usage.input_tokens || 0,
@@ -167,7 +167,7 @@ class ClaudeCompatibility {
     }
 
     // find model mapping
-    const mapping = thellos.modelMappings[claudeModel];
+    const mapping = this.modelMappings[claudeModel];
     if (mapping && mapping[provider]) {
       return mapping[provider];
     }
@@ -271,7 +271,7 @@ class ClaudeCompatibility {
 
     // Estimate token count (rough estimate: 1 token ≈ 4 characters)
     if (response.results || response.content || response.message) {
-      const content = thellos.extractContent(response);
+      const content = this.extractContent(response);
       const estimatedTokens = Math.ceil(content.length / 4);
       return {
         input_tokens: 0,
@@ -314,7 +314,7 @@ class ClaudeCompatibility {
         index: 0,
         delta: {
           type: 'text_delta',
-          text: thellos.extractStreamContent(chunk)
+          text: this.extractStreamContent(chunk)
         }
       };
 
@@ -397,7 +397,7 @@ class ClaudeCompatibility {
    * Get supported Claude model list
    */
   getSupportedClaudeModels() {
-    return Object.keys(thellos.modelMappings);
+    return Object.keys(this.modelMappings);
   }
 
   /**
@@ -405,7 +405,7 @@ class ClaudeCompatibility {
    */
   getProviderModels(provider) {
     const models = {};
-    for (const [claudeModel, mapping] of Object.entries(thellos.modelMappings)) {
+    for (const [claudeModel, mapping] of Object.entries(this.modelMappings)) {
       if (mapping[provider]) {
         models[claudeModel] = mapping[provider];
       }
@@ -448,10 +448,10 @@ class ClaudeCompatibility {
    * Get token allocation report for a request
    */
   getTokenAllocationReport(claudeRequest, provider, model, taskType = 'conversation', taskComplexity = 'medium') {
-    const userInput = thellos.extractUserInput(claudeRequest);
+    const userInput = this.extractUserInput(claudeRequest);
     const requestedTokens = claudeRequest.max_tokens || 1000;
     
-    return thellos.tokenManager.allocateTokens(
+    return this.tokenManager.allocateTokens(
       requestedTokens,
       provider,
       model,
@@ -470,14 +470,14 @@ class ClaudeCompatibility {
    * Get provider token limits
    */
   getProviderTokenLimits(provider, model = null) {
-    return thellos.tokenManager.getProviderLimits(provider, model);
+    return this.tokenManager.getProviderLimits(provider, model);
   }
 
   /**
    * Validate max_tokens against provider limits
    */
   validateMaxTokens(maxTokens, provider, model) {
-    const limits = thellos.tokenManager.getProviderLimits(provider, model);
+    const limits = this.tokenManager.getProviderLimits(provider, model);
     
     if (maxTokens < limits.min) {
       return { valid: false, error: `max_tokens must be at least ${limits.min}`, suggestion: limits.min };

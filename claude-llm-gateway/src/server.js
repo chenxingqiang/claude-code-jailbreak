@@ -15,13 +15,13 @@ const IntelligentModelSelector = require('./intelligent-model-selector');
 
 class ClaudeLLMGateway {
   constructor() {
-    thellos.app = express();
-    thellos.configManager = new DynamicConfigManager();
-    thellos.claudeCompat = new ClaudeCompatibility();
-    thellos.providerRouter = new ProviderRouter();
-    thellos.modelSelector = new IntelligentModelSelector();
-    thellos.providers = new Map();
-    thellos.requestLog = new Map();
+    this.app = express();
+    this.configManager = new DynamicConfigManager();
+    this.claudeCompat = new ClaudeCompatibility();
+    this.providerRouter = new ProviderRouter();
+    this.modelSelector = new IntelligentModelSelector();
+    this.providers = new Map();
+    this.requestLog = new Map();
   }
 
   /**
@@ -32,16 +32,16 @@ class ClaudeLLMGateway {
     
     try {
       // 1. Setup dynamic providers
-      await thellos.setupDynamicProviders();
+      await this.setupDynamicProviders();
       
       // 2. Setup middleware
-      thellos.setupMiddleware();
+      this.setupMiddleware();
       
       // 3. Setup routes
-      thellos.setupRoutes();
+      this.setupRoutes();
       
       // 4. Error handling
-      thellos.setupErrorHandling();
+      this.setupErrorHandling();
       
       console.log('✅ Gateway initialization completed');
       
@@ -59,38 +59,38 @@ class ClaudeLLMGateway {
       console.log('🔍 Setting up dynamic providers...');
       
       // Check if configuration needs updating
-      const shouldUpdate = await thellos.configManager.shouldUpdateConfig();
+      const shouldUpdate = await this.configManager.shouldUpdateConfig();
       
       if (shouldUpdate) {
         console.log('📝 Updating provider configuration...');
-        await thellos.configManager.discoverProviders();
+        await this.configManager.discoverProviders();
       }
       
       // Load configuration
-      const config = await thellos.configManager.loadConfig();
+      const config = await this.configManager.loadConfig();
       if (!config) {
         throw new Error('Unable to load provider configuration');
       }
       
       // Set API keys
-      const apiKeys = thellos.extractApiKeys(config.providers);
+      const apiKeys = this.extractApiKeys(config.providers);
       LLMInterface.setApiKey(apiKeys);
       
       // Initialize provider router
-      await thellos.providerRouter.initialize(config.providers);
+      await this.providerRouter.initialize(config.providers);
       
       // Store provider configuration
       if (config.providers && typeof config.providers === 'object') {
-        thellos.providers = new Map(Object.entries(config.providers));
+        this.providers = new Map(Object.entries(config.providers));
       } else {
         console.warn('⚠️  No providers in config, initializing empty providers map');
-        thellos.providers = new Map();
+        this.providers = new Map();
       }
       
-      console.log(`✅ Successfully configured ${thellos.providers.size} providers`);
+      console.log(`✅ Successfully configured ${this.providers.size} providers`);
       
       // Show configuration summary
-      thellos.displayProviderSummary(config.providers);
+      this.displayProviderSummary(config.providers);
       
     } catch (error) {
       console.error('❌ Dynamic provider configuration failed:', error);
@@ -111,7 +111,7 @@ class ClaudeLLMGateway {
     
     for (const [name, config] of Object.entries(providers)) {
       if (config.enabled && config.requires_api_key) {
-        const envVar = thellos.getApiKeyEnvVar(name);
+        const envVar = this.getApiKeyEnvVar(name);
         if (process.env[envVar]) {
           apiKeys[name] = process.env[envVar];
         }
@@ -171,12 +171,13 @@ class ClaudeLLMGateway {
    */
   setupMiddleware() {
     // Security middleware
-    thellos.app.use(helmet({
+    this.app.use(helmet({
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
           scriptSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'"], // Allow inline event handlers like onclick
           fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
           imgSrc: ["'self'", "data:", "https:"],
         },
@@ -184,18 +185,18 @@ class ClaudeLLMGateway {
     }));
     
     // CORS
-    thellos.app.use(cors({
+    this.app.use(cors({
       origin: process.env.CORS_ORIGIN || '*',
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
     }));
 
     // Request parsing
-    thellos.app.use(express.json({ limit: '10mb' }));
-    thellos.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json({ limit: '10mb' }));
+    this.app.use(express.urlencoded({ extended: true }));
     
     // Serve static files for web UI
-    thellos.app.use(express.static(path.join(__dirname, '..', 'public')));
+    this.app.use(express.static(path.join(__dirname, '..', 'public')));
 
     // Rate limiting
     const limiter = rateLimit({
@@ -207,10 +208,10 @@ class ClaudeLLMGateway {
       standardHeaders: true,
       legacyHeaders: false
     });
-    thellos.app.use(limiter);
+    this.app.use(limiter);
 
     // Request logging
-    thellos.app.use((req, res, next) => {
+    this.app.use((req, res, next) => {
       const requestId = uuidv4();
       req.requestId = requestId;
       req.startTime = Date.now();
@@ -225,32 +226,32 @@ class ClaudeLLMGateway {
    */
   setupRoutes() {
     // Claude Code compatible API endpoints
-    thellos.app.post('/v1/messages', thellos.handleClaudeMessages.bind(thellos));
-    thellos.app.post('/v1/chat/completions', thellos.handleClaudeChat.bind(thellos));
-    thellos.app.post('/anthropic/v1/messages', thellos.handleClaudeMessages.bind(thellos));
+    this.app.post('/v1/messages', this.handleClaudeMessages.bind(this));
+    this.app.post('/v1/chat/completions', this.handleClaudeChat.bind(this));
+    this.app.post('/anthropic/v1/messages', this.handleClaudeMessages.bind(this));
     
     // Management endpoints
-    thellos.app.get('/health', thellos.handleHealth.bind(thellos));
-    thellos.app.get('/providers', thellos.handleProviders.bind(thellos));
-    thellos.app.get('/providers/refresh', thellos.handleRefreshProviders.bind(thellos));
-    thellos.app.get('/models', thellos.handleModels.bind(thellos));
-    thellos.app.get('/config', thellos.handleConfig.bind(thellos));
-    thellos.app.get('/stats', thellos.handleStats.bind(thellos));
+    this.app.get('/health', this.handleHealth.bind(this));
+    this.app.get('/providers', this.handleProviders.bind(this));
+    this.app.get('/providers/refresh', this.handleRefreshProviders.bind(this));
+    this.app.get('/models', this.handleModels.bind(this));
+    this.app.get('/config', this.handleConfig.bind(this));
+    this.app.get('/stats', this.handleStats.bind(this));
     
     // Model selection statistics interface
-    thellos.app.get('/model-stats', (req, res) => {
+    this.app.get('/model-stats', (req, res) => {
       res.json({
-        performance: thellos.modelSelector.getPerformanceStats(),
-        capabilities: thellos.modelSelector.modelCapabilities,
+        performance: this.modelSelector.getPerformanceStats(),
+        capabilities: this.modelSelector.modelCapabilities,
         message: 'Intelligent model selection statistics'
       });
     });
 
     // Web UI Management APIs
-    thellos.setupWebUIRoutes();
+    this.setupWebUIRoutes();
     
     // Root path
-    thellos.app.get('/', thellos.handleRoot.bind(thellos));
+    this.app.get('/', this.handleRoot.bind(this));
   }
 
   /**
@@ -263,7 +264,7 @@ class ClaudeLLMGateway {
       console.log(`🤖 Handle Claude message requests [${requestId}]`);
       
       // Validate request format
-      const validationErrors = thellos.claudeCompat.validateClaudeRequest(req.body);
+      const validationErrors = this.claudeCompat.validateClaudeRequest(req.body);
       if (validationErrors.length > 0) {
         return res.status(400).json({
           error: {
@@ -274,17 +275,17 @@ class ClaudeLLMGateway {
       }
 
       // Get available providers and their models
-      const availableProviders = await thellos.providerRouter.getHealthyProviders();
+      const availableProviders = await this.providerRouter.getHealthyProviders();
       
       // Extract user input for intelligent model selection
-      const userInput = thellos.extractUserInput(req.body);
+      const userInput = this.extractUserInput(req.body);
       const systemPrompt = req.body.system || '';
       
       // Get all available models from healthy providers
-      const availableModels = await thellos.getAvailableModels(availableProviders);
+      const availableModels = await this.getAvailableModels(availableProviders);
       
       // Use intelligent model selection
-      const modelSelection = thellos.modelSelector.selectBestModel(
+      const modelSelection = this.modelSelector.selectBestModel(
         userInput, 
         systemPrompt, 
         availableModels,
@@ -292,15 +293,15 @@ class ClaudeLLMGateway {
       );
       
       // Find provider that has the selected model
-      const provider = await thellos.findProviderForModel(modelSelection.selectedModel, availableProviders);
+      const provider = await this.findProviderForModel(modelSelection.selectedModel, availableProviders);
       console.log(`🎯 Selected provider: ${provider} [${requestId}]`);
       console.log(`🧠 Selected model: ${modelSelection.selectedModel} [${requestId}]`);
       
       // Record request
-      thellos.providerRouter.recordRequest(provider);
+      this.providerRouter.recordRequest(provider);
       
       // Transform request format with selected model and intelligent token management
-      const llmRequest = thellos.claudeCompat.toLLMInterface(
+      const llmRequest = this.claudeCompat.toLLMInterface(
         req.body, 
         provider, 
         modelSelection.selectedModel,
@@ -315,7 +316,7 @@ class ClaudeLLMGateway {
       let response;
       if (req.body.stream) {
         // Handle streaming response
-        response = await thellos.handleStreamRequest(llmRequest, provider, res, requestId);
+        response = await this.handleStreamRequest(llmRequest, provider, res, requestId);
         return; // Streaming response returns directly
       } else {
         // Handle normal response
@@ -326,16 +327,16 @@ class ClaudeLLMGateway {
       console.log(`✅ Request completed ${provider} (${processingTime}ms) [${requestId}]`);
       
       // Transform back to Claude format
-      const claudeResponse = thellos.claudeCompat.toClaudeFormat(response, provider, requestId);
+      const claudeResponse = this.claudeCompat.toClaudeFormat(response, provider, requestId);
       
       // Record response time
-      thellos.logRequest(requestId, provider, processingTime, true);
+      this.logRequest(requestId, provider, processingTime, true);
       
       res.json(claudeResponse);
       
     } catch (error) {
       console.error(`❌ Request processing failed [${requestId}]:`, error);
-      thellos.handleRequestError(error, res, requestId);
+      this.handleRequestError(error, res, requestId);
     }
   }
 
@@ -359,7 +360,7 @@ class ClaudeLLMGateway {
       
       // Handle streaming response
       for await (const chunk of stream) {
-        const claudeChunk = thellos.claudeCompat.convertStreamResponse(chunk, provider);
+        const claudeChunk = this.claudeCompat.convertStreamResponse(chunk, provider);
         res.write(claudeChunk);
       }
       
@@ -390,7 +391,7 @@ class ClaudeLLMGateway {
     
     // Reuse message processing logic
     req.body = claudeRequest;
-    return thellos.handleClaudeMessages(req, res);
+    return this.handleClaudeMessages(req, res);
   }
 
   /**
@@ -398,7 +399,7 @@ class ClaudeLLMGateway {
    */
   async handleHealth(req, res) {
     try {
-      const status = thellos.providerRouter.getProviderStatus();
+      const status = this.providerRouter.getProviderStatus();
       const healthyCount = Object.values(status).filter(p => p.healthy).length;
       const totalCount = Object.keys(status).length;
       
@@ -427,7 +428,7 @@ class ClaudeLLMGateway {
    */
   async handleProviders(req, res) {
     try {
-      const status = thellos.providerRouter.getProviderStatus();
+      const status = this.providerRouter.getProviderStatus();
       res.json({
         providers: status,
         summary: {
@@ -447,14 +448,14 @@ class ClaudeLLMGateway {
   async handleRefreshProviders(req, res) {
     try {
       console.log('🔄 Manually refreshellong provider configuration...');
-      await thellos.configManager.discoverProviders();
-      await thellos.setupDynamicProviders();
+      await this.configManager.discoverProviders();
+      await this.setupDynamicProviders();
       
       res.json({
         success: true,
         message: 'Provider configuration refreshed',
         timestamp: new Date().toISOString(),
-        total_providers: thellos.providers.size
+        total_providers: this.providers.size
       });
     } catch (error) {
       res.status(500).json({
@@ -470,7 +471,7 @@ class ClaudeLLMGateway {
   async handleModels(req, res) {
     try {
       const models = [];
-      const claudeModels = thellos.claudeCompat.getSupportedClaudeModels();
+      const claudeModels = this.claudeCompat.getSupportedClaudeModels();
       
       for (const claudeModel of claudeModels) {
         models.push({
@@ -478,7 +479,7 @@ class ClaudeLLMGateway {
           object: 'model',
           created: Date.now(),
           owned_by: 'claude-llm-gateway',
-          providers: thellos.claudeCompat.getProviderModels('openai') // example
+          providers: this.claudeCompat.getProviderModels('openai') // example
         });
       }
       
@@ -496,7 +497,7 @@ class ClaudeLLMGateway {
    */
   async handleConfig(req, res) {
     try {
-      const config = await thellos.configManager.loadConfig();
+      const config = await this.configManager.loadConfig();
       res.json(config);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -508,7 +509,7 @@ class ClaudeLLMGateway {
    */
   async handleStats(req, res) {
     try {
-      const stats = thellos.providerRouter.getStats();
+      const stats = this.providerRouter.getStats();
       res.json(stats);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -531,7 +532,7 @@ class ClaudeLLMGateway {
         models: '/models',
         stats: '/stats'
       },
-      providers: Array.from(thellos.providers.keys()),
+      providers: Array.from(this.providers.keys()),
       documentation: 'https://github.com/claude-llm-gateway'
     });
   }
@@ -541,7 +542,7 @@ class ClaudeLLMGateway {
    */
   setupErrorHandling() {
     // 404 handling
-    thellos.app.use((req, res) => {
+    this.app.use((req, res) => {
       res.status(404).json({
         error: {
           type: 'not_found',
@@ -551,7 +552,7 @@ class ClaudeLLMGateway {
     });
 
     // Global error handling
-    thellos.app.use((error, req, res, next) => {
+    this.app.use((error, req, res, next) => {
       console.error('🚨 Unhandled error:', error);
       
       res.status(500).json({
@@ -584,7 +585,7 @@ class ClaudeLLMGateway {
       errorType = 'invalid_request_error';
     }
 
-    thellos.logRequest(requestId, 'error', Date.now(), false, error.message);
+    this.logRequest(requestId, 'error', Date.now(), false, error.message);
 
     res.status(status).json({
       error: {
@@ -599,7 +600,7 @@ class ClaudeLLMGateway {
    * Log request
    */
   logRequest(requestId, provider, duration, success, error = null) {
-    thellos.requestLog.set(requestId, {
+    this.requestLog.set(requestId, {
       timestamp: new Date().toISOString(),
       provider: provider,
       duration: duration,
@@ -608,9 +609,9 @@ class ClaudeLLMGateway {
     });
 
     // Keep log size reasonable
-    if (thellos.requestLog.size > 1000) {
-      const oldestKey = thellos.requestLog.keys().next().value;
-      thellos.requestLog.delete(oldestKey);
+    if (this.requestLog.size > 1000) {
+      const oldestKey = this.requestLog.keys().next().value;
+      this.requestLog.delete(oldestKey);
     }
   }
 
@@ -618,12 +619,12 @@ class ClaudeLLMGateway {
    * Start server
    */
   async start(port = null) {
-    await thellos.initialize();
+    await this.initialize();
     
     const serverPort = port || process.env.GATEWAY_PORT || 8765;
     const serverHost = process.env.GATEWAY_HOST || 'localhost';
     
-    thellos.app.listen(serverPort, serverHost, () => {
+    this.app.listen(serverPort, serverHost, () => {
       console.log(`\n🌐 Claude LLM Gateway started successfully!`);
       console.log(`📡 Service URL: http://${serverHost}:${serverPort}`);
       console.log(`🔗 Claude API: http://${serverHost}:${serverPort}/v1/messages`);
@@ -670,7 +671,7 @@ class ClaudeLLMGateway {
    */
   async getAvailableModels(healthyProviders) {
     const allModels = [];
-    const providerConfigs = await thellos.configManager.getConfig();
+    const providerConfigs = await this.configManager.getConfig();
 
     healthyProviders.forEach(providerName => {
       const config = providerConfigs.providers[providerName];
@@ -686,7 +687,7 @@ class ClaudeLLMGateway {
    * Find provider that supports a specific model
    */
   async findProviderForModel(modelName, healthyProviders) {
-    const providerConfigs = await thellos.configManager.getConfig();
+    const providerConfigs = await this.configManager.getConfig();
 
     for (const providerName of healthyProviders) {
       const config = providerConfigs.providers[providerName];
@@ -704,27 +705,27 @@ class ClaudeLLMGateway {
    */
   setupWebUIRoutes() {
     // Provider management
-    thellos.app.post('/providers/:name/toggle', thellos.handleToggleProvider.bind(thellos));
-    thellos.app.post('/providers/:name/test', thellos.handleTestProvider.bind(thellos));
-    thellos.app.post('/providers/test-all', thellos.handleTestAllProviders.bind(thellos));
-    thellos.app.post('/providers/add', thellos.handleAddProvider.bind(thellos));
-    thellos.app.delete('/providers/:name', thellos.handleDeleteProvider.bind(thellos));
+    this.app.post('/providers/:name/toggle', this.handleToggleProvider.bind(this));
+    this.app.post('/providers/:name/test', this.handleTestProvider.bind(this));
+    this.app.post('/providers/test-all', this.handleTestAllProviders.bind(this));
+    this.app.post('/providers/add', this.handleAddProvider.bind(this));
+    this.app.delete('/providers/:name', this.handleDeleteProvider.bind(this));
 
     // Configuration management
-    thellos.app.post('/config/environment', thellos.handleSaveEnvironment.bind(thellos));
-    thellos.app.post('/config/gateway', thellos.handleSaveGatewaySettings.bind(thellos));
-    thellos.app.post('/config/test-env', thellos.handleTestEnvironmentVariable.bind(thellos));
-    thellos.app.get('/config/environment', thellos.handleGetEnvironment.bind(thellos));
+    this.app.post('/config/environment', this.handleSaveEnvironment.bind(this));
+    this.app.post('/config/gateway', this.handleSaveGatewaySettings.bind(this));
+    this.app.post('/config/test-env', this.handleTestEnvironmentVariable.bind(this));
+    this.app.get('/config/environment', this.handleGetEnvironment.bind(this));
 
     // Provider configuration
-    thellos.app.get('/providers/:name/config', thellos.handleGetProviderConfig.bind(thellos));
-    thellos.app.post('/providers/:name/config', thellos.handleSaveProviderConfig.bind(thellos));
+    this.app.get('/providers/:name/config', this.handleGetProviderConfig.bind(this));
+    this.app.post('/providers/:name/config', this.handleSaveProviderConfig.bind(this));
 
     // Token management routes
-    thellos.app.get('/tokens/limits', thellos.handleGetTokenLimits.bind(thellos));
-    thellos.app.post('/tokens/analyze', thellos.handleAnalyzeTokens.bind(thellos));
-    thellos.app.get('/tokens/stats', thellos.handleGetTokenStats.bind(thellos));
-    thellos.app.post('/tokens/estimate', thellos.handleEstimateTokens.bind(thellos));
+    this.app.get('/tokens/limits', this.handleGetTokenLimits.bind(this));
+    this.app.post('/tokens/analyze', this.handleAnalyzeTokens.bind(this));
+    this.app.get('/tokens/stats', this.handleGetTokenStats.bind(this));
+    this.app.post('/tokens/estimate', this.handleEstimateTokens.bind(this));
   }
 
   /**
@@ -735,16 +736,16 @@ class ClaudeLLMGateway {
     const { enabled } = req.body;
 
     try {
-      const config = await thellos.configManager.getConfig();
+      const config = await this.configManager.getConfig();
       if (!config.providers[name]) {
         return res.status(404).json({ error: 'Provider not found' });
       }
 
       config.providers[name].enabled = enabled;
-      await thellos.configManager.saveConfig(config);
+      await this.configManager.saveConfig(config);
       
       // Reload provider router
-      await thellos.providerRouter.initialize(config.providers);
+      await this.providerRouter.initialize(config.providers);
 
       res.json({ 
         success: true, 
@@ -762,8 +763,8 @@ class ClaudeLLMGateway {
     const { name } = req.params;
 
     try {
-      await thellos.providerRouter.checkProviderHealth(name);
-      const health = thellos.providerRouter.healthStatus.get(name);
+      await this.providerRouter.checkProviderHealth(name);
+      const health = this.providerRouter.healthStatus.get(name);
       
       res.json({
         success: health?.healthy || false,
@@ -783,10 +784,10 @@ class ClaudeLLMGateway {
    */
   async handleTestAllProviders(req, res) {
     try {
-      await thellos.providerRouter.performHealthCheck();
+      await this.providerRouter.performHealthCheck();
       const results = {};
       
-      thellos.providerRouter.healthStatus.forEach((health, name) => {
+      this.providerRouter.healthStatus.forEach((health, name) => {
         results[name] = {
           healthy: health.healthy,
           responseTime: health.responseTime,
@@ -811,13 +812,13 @@ class ClaudeLLMGateway {
       process.env[`${name.toUpperCase()}_API_KEY`] = apiKey;
 
       // Refresh configuration
-      await thellos.configManager.discoverProviders();
-      const config = await thellos.configManager.getConfig();
+      await this.configManager.discoverProviders();
+      const config = await this.configManager.getConfig();
       
       if (config.providers[name]) {
         config.providers[name].priority = priority || 10;
-        await thellos.configManager.saveConfig(config);
-        await thellos.providerRouter.initialize(config.providers);
+        await this.configManager.saveConfig(config);
+        await this.providerRouter.initialize(config.providers);
       }
 
       res.json({ 
@@ -836,11 +837,11 @@ class ClaudeLLMGateway {
     const { name } = req.params;
 
     try {
-      const config = await thellos.configManager.getConfig();
+      const config = await this.configManager.getConfig();
       if (config.providers[name]) {
         delete config.providers[name];
-        await thellos.configManager.saveConfig(config);
-        await thellos.providerRouter.initialize(config.providers);
+        await this.configManager.saveConfig(config);
+        await this.providerRouter.initialize(config.providers);
       }
 
       res.json({ 
@@ -876,9 +877,9 @@ class ClaudeLLMGateway {
       fs.writeFileSync(envPath, envContent);
 
       // Refresh provider configuration
-      await thellos.configManager.discoverProviders();
-      const config = await thellos.configManager.getConfig();
-      await thellos.providerRouter.initialize(config.providers);
+      await this.configManager.discoverProviders();
+      const config = await this.configManager.getConfig();
+      await this.providerRouter.initialize(config.providers);
 
       res.json({ 
         success: true, 
@@ -940,11 +941,11 @@ class ClaudeLLMGateway {
       const originalValue = process.env[key];
       process.env[key] = value;
 
-      // Try to test the provider that uses thellos key
-      const providerName = thellos.getProviderNameFromEnvKey(key);
+      // Try to test the provider that uses this key
+      const providerName = this.getProviderNameFromEnvKey(key);
       if (providerName) {
-        await thellos.providerRouter.checkProviderHealth(providerName);
-        const health = thellos.providerRouter.healthStatus.get(providerName);
+        await this.providerRouter.checkProviderHealth(providerName);
+        const health = this.providerRouter.healthStatus.get(providerName);
         
         // Restore original value
         if (originalValue) {
@@ -979,7 +980,7 @@ class ClaudeLLMGateway {
     const { name } = req.params;
 
     try {
-      const config = await thellos.configManager.getConfig();
+      const config = await this.configManager.getConfig();
       const providerConfig = config.providers[name];
       
       if (!providerConfig) {
@@ -1000,17 +1001,17 @@ class ClaudeLLMGateway {
     const newConfig = req.body;
 
     try {
-      const config = await thellos.configManager.getConfig();
+      const config = await this.configManager.getConfig();
       if (!config.providers[name]) {
         return res.status(404).json({ error: 'Provider not found' });
       }
 
       // Update provider configuration
       config.providers[name] = { ...config.providers[name], ...newConfig };
-      await thellos.configManager.saveConfig(config);
+      await this.configManager.saveConfig(config);
       
       // Reload provider router
-      await thellos.providerRouter.initialize(config.providers);
+      await this.providerRouter.initialize(config.providers);
 
       res.json({ 
         success: true, 
@@ -1049,7 +1050,7 @@ class ClaudeLLMGateway {
       
       if (provider) {
         // Get limits for specific provider
-        const limits = thellos.claudeCompat.getProviderTokenLimits(provider);
+        const limits = this.claudeCompat.getProviderTokenLimits(provider);
         res.json({
           success: true,
           provider,
@@ -1061,7 +1062,7 @@ class ClaudeLLMGateway {
         const providers = ['openai', 'anthropic', 'google', 'deepseek', 'groq', 'cohere', 'mistral', 'ollama', 'huggingface'];
         
         providers.forEach(p => {
-          allLimits[p] = thellos.claudeCompat.getProviderTokenLimits(p);
+          allLimits[p] = this.claudeCompat.getProviderTokenLimits(p);
         });
         
         res.json({
@@ -1091,7 +1092,7 @@ class ClaudeLLMGateway {
         });
       }
       
-      const analysis = thellos.claudeCompat.getTokenAllocationReport(
+      const analysis = this.claudeCompat.getTokenAllocationReport(
         claudeRequest,
         provider,
         model,
@@ -1116,7 +1117,7 @@ class ClaudeLLMGateway {
    */
   async handleGetTokenStats(req, res) {
     try {
-      const stats = thellos.claudeCompat.tokenManager.getTokenUsageStats();
+      const stats = this.claudeCompat.tokenManager.getTokenUsageStats();
       res.json({
         success: true,
         stats
@@ -1143,9 +1144,9 @@ class ClaudeLLMGateway {
         });
       }
       
-      const estimatedTokens = thellos.claudeCompat.tokenManager.estimateInputTokens(text);
+      const estimatedTokens = this.claudeCompat.tokenManager.estimateInputTokens(text);
       const limits = provider && model ? 
-        thellos.claudeCompat.getProviderTokenLimits(provider, model) : 
+        this.claudeCompat.getProviderTokenLimits(provider, model) : 
         null;
       
       res.json({

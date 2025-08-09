@@ -24,29 +24,29 @@
         .healthy { background-color: #10b981; }
         .unhealthy { background-color: #ef4444; }
         .loading { background-color: #f59e0b; animation: pulse 1s infinite; }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        
+
         .api-key-input {
             font-family: 'Courier New', monospace;
         }
-        
+
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 50px;
             height: 24px;
         }
-        
+
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -58,7 +58,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
+
         .slider:before {
             position: absolute;
             content: "";
@@ -70,11 +70,11 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
+
         input:checked + .slider {
             background-color: #10b981;
         }
-        
+
         input:checked + .slider:before {
             transform: translateX(26px);
         }
@@ -91,8 +91,17 @@
                     <span class="ml-3 px-2 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">v1.1.0</span>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <!-- Language Switcher -->
+                    <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                        <button onclick="switchLanguage('zh')" id="lang-zh" class="px-3 py-1 text-sm font-medium rounded-md transition-colors">
+                            中文
+                        </button>
+                        <button onclick="switchLanguage('en')" id="lang-en" class="px-3 py-1 text-sm font-medium rounded-md transition-colors">
+                            EN
+                        </button>
+                    </div>
                     <button onclick="refreshAll()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                        <i class="fas fa-sync-alt mr-2"></i>Refresh Status
+                        <i class="fas fa-sync-alt mr-2"></i><span data-i18n="refreshStatus">Refresh Status</span>
                     </button>
                     <div class="text-sm text-gray-500">
                         <span id="last-update">Loading...</span>
@@ -117,7 +126,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <div class="flex items-center">
                     <div class="p-2 bg-blue-100 rounded-lg">
@@ -129,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <div class="flex items-center">
                     <div class="p-2 bg-purple-100 rounded-lg">
@@ -141,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="bg-white p-6 rounded-lg shadow-sm">
                 <div class="flex items-center">
                     <div class="p-2 bg-yellow-100 rounded-lg">
@@ -159,19 +168,19 @@
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-8">
                 <button onclick="showTab('providers')" id="providers-tab" class="tab-button active border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600">
-                    <i class="fas fa-server mr-2"></i>Provider Management
+                    <i class="fas fa-server mr-2"></i><span data-i18n="providers">Provider Management</span>
                 </button>
                 <button onclick="showTab('config')" id="config-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-cogs mr-2"></i>Configuration
+                    <i class="fas fa-cogs mr-2"></i><span data-i18n="configuration">Configuration</span>
                 </button>
                 <button onclick="showTab('api-info')" id="api-info-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-link mr-2"></i>API Endpoints
+                    <i class="fas fa-link mr-2"></i><span data-i18n="apiEndpoints">API Endpoints</span>
                 </button>
                 <button onclick="showTab('models')" id="models-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-brain mr-2"></i>Intelligent Selection
+                    <i class="fas fa-brain mr-2"></i><span data-i18n="intelligentSelection">Intelligent Selection</span>
                 </button>
                 <button onclick="showTab('logs')" id="logs-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-list mr-2"></i>Real-time Logs
+                    <i class="fas fa-list mr-2"></i><span data-i18n="realTimeLogs">Real-time Logs</span>
                 </button>
             </nav>
         </div>
@@ -269,7 +278,7 @@
                             <div><strong>Configuration:</strong> <span class="text-blue-600" id="config-url">http://localhost:8765/providers/refresh</span></div>
                         </div>
                     </div>
-                    
+
                     <!-- Claude API Endpoints -->
                     <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                         <h3 class="text-lg font-semibold text-green-900 mb-3">🤖 Claude-Compatible API Endpoints</h3>
@@ -278,7 +287,7 @@
                             <div><strong>Chat Completions:</strong> <span class="text-green-600" id="chat-url">http://localhost:8765/v1/chat/completions</span></div>
                         </div>
                     </div>
-                    
+
                     <!-- Token Management -->
                     <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                         <h3 class="text-lg font-semibold text-purple-900 mb-3">🧠 Token Management API</h3>
@@ -289,7 +298,7 @@
                             <div><strong>Token Analysis:</strong> <span class="text-purple-600" id="token-analysis-url">http://localhost:8765/tokens/analyze</span></div>
                         </div>
                     </div>
-                    
+
                     <!-- Usage Examples -->
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">📚 Usage Examples</h3>
@@ -306,19 +315,19 @@
     "max_tokens": 500
   }'</code></pre>
                             </div>
-                            
+
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-2">Health Check:</h4>
                                 <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>curl http://localhost:8765/health</code></pre>
                             </div>
-                            
+
                             <div>
                                 <h4 class="font-medium text-gray-800 mb-2">Provider Status:</h4>
                                 <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>curl http://localhost:8765/providers</code></pre>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Environment Setup -->
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <h3 class="text-lg font-semibold text-yellow-900 mb-3">⚙️ Claude Code Integration</h3>

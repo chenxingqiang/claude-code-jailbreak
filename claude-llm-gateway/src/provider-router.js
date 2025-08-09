@@ -2,11 +2,11 @@ const { LLMInterface } = require('llm-interface');
 
 class ProviderRouter {
   constructor() {
-    thellos.providerConfig = new Map();
-    thellos.healthStatus = new Map();
-    thellos.requestCounts = new Map();
-    thellos.lastHealthCheck = null;
-    thellos.roundRobinIndex = 0;
+    this.providerConfig = new Map();
+    this.healthStatus = new Map();
+    this.requestCounts = new Map();
+    this.lastHealthCheck = null;
+    this.roundRobinIndex = 0;
   }
 
   /**
@@ -15,21 +15,21 @@ class ProviderRouter {
   async initialize(providers) {
     if (!providers || typeof providers !== 'object') {
       console.warn('⚠️  No providers configuration found in ProviderRouter');
-      thellos.providerConfig = new Map();
+      this.providerConfig = new Map();
       return;
     }
     
-    thellos.providerConfig = new Map(Object.entries(providers));
+    this.providerConfig = new Map(Object.entries(providers));
     
     // Initialize request count
-    for (const providerName of thellos.providerConfig.keys()) {
-      thellos.requestCounts.set(providerName, 0);
+    for (const providerName of this.providerConfig.keys()) {
+      this.requestCounts.set(providerName, 0);
     }
 
     // Start health checks
-    await thellos.startHealthChecks();
+    await this.startHealthChecks();
     
-    console.log(`🚀 Provider router initialization completed, supporting ${thellos.providerConfig.size} providers`);
+    console.log(`🚀 Provider router initialization completed, supporting ${this.providerConfig.size} providers`);
   }
 
   /**
@@ -40,27 +40,27 @@ class ProviderRouter {
       // 1. Check if specific provider is specified
       if (options.preferredProvider) {
         const provider = options.preferredProvider;
-        if (thellos.isProviderHealthy(provider)) {
+        if (this.isProviderHealthy(provider)) {
           console.log(`🎯 Using specified provider: ${provider}`);
           return provider;
         }
       }
 
       // 2. Select provider based on model type
-      const modelBasedProvider = thellos.selectByModel(request.model);
-      if (modelBasedProvider && thellos.isProviderHealthy(modelBasedProvider)) {
+      const modelBasedProvider = this.selectByModel(request.model);
+      if (modelBasedProvider && this.isProviderHealthy(modelBasedProvider)) {
         console.log(`🎯 Provider selected based on model: ${modelBasedProvider} (model: ${request.model})`);
         return modelBasedProvider;
       }
 
       // 3. Get healthy provider list
-      const healthyProviders = thellos.getHealthyProviders();
+      const healthyProviders = this.getHealthyProviders();
       if (healthyProviders.length === 0) {
         throw new Error('No healthy providers available');
       }
 
       // 4. Select based on load balancing strategy
-      const selectedProvider = thellos.loadBalance(healthyProviders, options.strategy);
+      const selectedProvider = this.loadBalance(healthyProviders, options.strategy);
       
       console.log(`⚖️ Load balancer selected provider: ${selectedProvider}`);
       return selectedProvider;
@@ -68,7 +68,7 @@ class ProviderRouter {
     } catch (error) {
       console.error('❌ Provider selection failed:', error);
       // Return default provider as last resort
-      return thellos.getDefaultProvider();
+      return this.getDefaultProvider();
     }
   }
 
@@ -119,16 +119,16 @@ class ProviderRouter {
   getHealthyProviders() {
     const healthy = [];
     
-    for (const [providerName, config] of thellos.providerConfig.entries()) {
-      if (config.enabled && thellos.isProviderHealthy(providerName)) {
+    for (const [providerName, config] of this.providerConfig.entries()) {
+      if (config.enabled && this.isProviderHealthy(providerName)) {
         healthy.push(providerName);
       }
     }
 
     // Sort by priority
     return healthy.sort((a, b) => {
-      const priorityA = thellos.providerConfig.get(a)?.priority || 10;
-      const priorityB = thellos.providerConfig.get(b)?.priority || 10;
+      const priorityA = this.providerConfig.get(a)?.priority || 10;
+      const priorityB = this.providerConfig.get(b)?.priority || 10;
       return priorityA - priorityB;
     });
   }
@@ -137,7 +137,7 @@ class ProviderRouter {
    * Check if provider is healthy
    */
   isProviderHealthy(providerName) {
-    const status = thellos.healthStatus.get(providerName);
+    const status = this.healthStatus.get(providerName);
     if (!status) return false;
 
     // Check health status and last check time
@@ -161,20 +161,20 @@ class ProviderRouter {
 
     switch (strategy) {
       case 'round_robin':
-        return thellos.roundRobinBalance(providers);
+        return this.roundRobinBalance(providers);
       
       case 'least_requests':
-        return thellos.leastRequestsBalance(providers);
+        return this.leastRequestsBalance(providers);
       
       case 'cost_optimized':
-        return thellos.costOptimizedBalance(providers);
+        return this.costOptimizedBalance(providers);
       
       case 'random':
         return providers[Math.floor(Math.random() * providers.length)];
       
       case 'priority':
       default:
-        return thellos.priorityBalance(providers);
+        return this.priorityBalance(providers);
     }
   }
 
@@ -182,8 +182,8 @@ class ProviderRouter {
    * Round-robin load balancing
    */
   roundRobinBalance(providers) {
-    const provider = providers[thellos.roundRobinIndex % providers.length];
-    thellos.roundRobinIndex++;
+    const provider = providers[this.roundRobinIndex % providers.length];
+    this.roundRobinIndex++;
     return provider;
   }
 
@@ -195,7 +195,7 @@ class ProviderRouter {
     let selectedProvider = providers[0];
 
     for (const provider of providers) {
-      const requestCount = thellos.requestCounts.get(provider) || 0;
+      const requestCount = this.requestCounts.get(provider) || 0;
       if (requestCount < minRequests) {
         minRequests = requestCount;
         selectedProvider = provider;
@@ -211,8 +211,8 @@ class ProviderRouter {
   costOptimizedBalance(providers) {
     // Sort by cost, select lowest cost available provider
     const sortedByCost = providers.sort((a, b) => {
-      const costA = thellos.providerConfig.get(a)?.cost_per_1k_tokens || 0;
-      const costB = thellos.providerConfig.get(b)?.cost_per_1k_tokens || 0;
+      const costA = this.providerConfig.get(a)?.cost_per_1k_tokens || 0;
+      const costB = this.providerConfig.get(b)?.cost_per_1k_tokens || 0;
       return costA - costB;
     });
 
@@ -231,8 +231,8 @@ class ProviderRouter {
    * Record request
    */
   recordRequest(provider) {
-    const currentCount = thellos.requestCounts.get(provider) || 0;
-    thellos.requestCounts.set(provider, currentCount + 1);
+    const currentCount = this.requestCounts.get(provider) || 0;
+    this.requestCounts.set(provider, currentCount + 1);
   }
 
   /**
@@ -240,7 +240,7 @@ class ProviderRouter {
    */
   getDefaultProvider() {
     // return the first enabled provider sorted by priority
-    const enabledProviders = Array.from(thellos.providerConfig.entries())
+    const enabledProviders = Array.from(this.providerConfig.entries())
       .filter(([name, config]) => config.enabled)
       .sort((a, b) => (a[1].priority || 10) - (b[1].priority || 10));
 
@@ -259,11 +259,11 @@ class ProviderRouter {
     console.log('🔍 Starting provider health checks...');
     
     // Perform health check immediately
-    await thellos.performHealthCheck();
+    await this.performHealthCheck();
     
     // Set up periodic health checks
     setInterval(async () => {
-      await thellos.performHealthCheck();
+      await this.performHealthCheck();
     }, 30000); // check every 30 seconds
   }
 
@@ -271,7 +271,7 @@ class ProviderRouter {
    * Perform health check
    */
   async performHealthCheck() {
-    const enabledProviders = Array.from(thellos.providerConfig.entries())
+    const enabledProviders = Array.from(this.providerConfig.entries())
       .filter(([name, config]) => config.enabled)
       .map(([name]) => name);
 
@@ -279,13 +279,13 @@ class ProviderRouter {
 
     for (const provider of enabledProviders) {
       try {
-        await thellos.checkProviderHealth(provider);
+        await this.checkProviderHealth(provider);
       } catch (error) {
         console.warn(`⚠️  Provider ${provider} health check failed: ${error.message}`);
       }
     }
 
-    thellos.lastHealthCheck = Date.now();
+    this.lastHealthCheck = Date.now();
   }
 
   /**
@@ -305,7 +305,7 @@ class ProviderRouter {
       const responseTime = Date.now() - startTime;
 
       // Record health status
-      thellos.healthStatus.set(provider, {
+      this.healthStatus.set(provider, {
         healthy: true,
         lastCheck: Date.now(),
         responseTime: responseTime,
@@ -315,15 +315,47 @@ class ProviderRouter {
       console.log(`✅ ${provider}: healthy (${responseTime}ms)`);
 
     } catch (error) {
-      // Record unhealthy status
-      thellos.healthStatus.set(provider, {
+      // Determine error type and provide friendly message
+      let status = 'unhealthy';
+      let friendlyMessage = error.message;
+      
+      // Check for authentication/API key errors
+      if (error.message.includes('HTTP 401') || error.message.includes('HTTP 403') || 
+          error.message.includes('Unauthorized') || error.message.includes('Forbidden') ||
+          error.message.includes('API key not found') || error.message.includes('Invalid API key') ||
+          error.message.includes('Authentication failed') || error.message.includes('Access denied')) {
+        status = 'no_api_key';
+        friendlyMessage = 'API key not configured or invalid';
+      } 
+      // Check for network/connection errors
+      else if (error.message.includes('HTTP 404') || error.message.includes('Not Found') ||
+               error.message.includes('ECONNREFUSED') || error.message.includes('ENOTFOUND') ||
+               error.message.includes('ECONNRESET') || error.message.includes('ETIMEDOUT')) {
+        status = 'unreachable';
+        friendlyMessage = 'Service unavailable or not configured';
+      }
+      // Check for rate limiting
+      else if (error.message.includes('HTTP 429') || error.message.includes('Rate limit') ||
+               error.message.includes('Too many requests')) {
+        status = 'rate_limited';
+        friendlyMessage = 'Rate limit exceeded';
+      }
+      
+      // Record status with friendly message
+      this.healthStatus.set(provider, {
         healthy: false,
         lastCheck: Date.now(),
         responseTime: null,
-        error: error.message
+        error: friendlyMessage,
+        status: status
       });
 
-      console.log(`❌ ${provider}: unhealthy - ${error.message}`);
+      // Display appropriate emoji and message
+      const emoji = status === 'no_api_key' ? '🔑' : 
+                    status === 'unreachable' ? '🔌' : 
+                    status === 'rate_limited' ? '⏳' : '❌';
+      
+      console.log(`${emoji} ${provider}: ${friendlyMessage}`);
     }
   }
 
@@ -333,14 +365,15 @@ class ProviderRouter {
   getProviderStatus() {
     const status = {};
     
-    for (const [providerName, config] of thellos.providerConfig.entries()) {
-      const health = thellos.healthStatus.get(providerName);
-      const requests = thellos.requestCounts.get(providerName) || 0;
+    for (const [providerName, config] of this.providerConfig.entries()) {
+      const health = this.healthStatus.get(providerName);
+      const requests = this.requestCounts.get(providerName) || 0;
       
       status[providerName] = {
         enabled: config.enabled,
         priority: config.priority,
         healthy: health?.healthy || false,
+        status_type: health?.status || 'unknown',
         last_check: health?.lastCheck || null,
         response_time: health?.responseTime || null,
         error: health?.error || null,
@@ -358,7 +391,7 @@ class ProviderRouter {
    * Manually set provider health status
    */
   setProviderHealth(provider, healthy, error = null) {
-    thellos.healthStatus.set(provider, {
+    this.healthStatus.set(provider, {
       healthy: healthy,
       lastCheck: Date.now(),
       responseTime: null,
@@ -370,8 +403,8 @@ class ProviderRouter {
    * Reset provider statistics
    */
   resetStats() {
-    thellos.requestCounts.clear();
-    thellos.roundRobinIndex = 0;
+    this.requestCounts.clear();
+    this.roundRobinIndex = 0;
     console.log('📊 Provider statistics reset');
   }
 
@@ -379,17 +412,17 @@ class ProviderRouter {
    * Get load balancing statistics
    */
   getStats() {
-    const totalRequests = Array.from(thellos.requestCounts.values()).reduce((sum, count) => sum + count, 0);
-    const healthyCount = Array.from(thellos.healthStatus.values()).filter(status => status.healthy).length;
-    const totalProviders = thellos.providerConfig.size;
+    const totalRequests = Array.from(this.requestCounts.values()).reduce((sum, count) => sum + count, 0);
+    const healthyCount = Array.from(this.healthStatus.values()).filter(status => status.healthy).length;
+    const totalProviders = this.providerConfig.size;
 
     return {
       total_requests: totalRequests,
       healthy_providers: healthyCount,
       total_providers: totalProviders,
-      last_health_check: thellos.lastHealthCheck,
-      request_distribution: Object.fromEntries(thellos.requestCounts),
-      round_robin_index: thellos.roundRobinIndex
+      last_health_check: this.lastHealthCheck,
+      request_distribution: Object.fromEntries(this.requestCounts),
+      round_robin_index: this.roundRobinIndex
     };
   }
 
@@ -399,8 +432,8 @@ class ProviderRouter {
   getHealthyProviders() {
     const healthyProviders = [];
     
-    thellos.providerConfig.forEach((config, provider) => {
-      const health = thellos.healthStatus.get(provider);
+    this.providerConfig.forEach((config, provider) => {
+      const health = this.healthStatus.get(provider);
       if (config.enabled && health && health.healthy) {
         healthyProviders.push(provider);
       }
@@ -408,8 +441,8 @@ class ProviderRouter {
     
     // Sort by priority (lower numbers = hellogher priority)
     healthyProviders.sort((a, b) => {
-      const priorityA = thellos.providerConfig.get(a)?.priority || 999;
-      const priorityB = thellos.providerConfig.get(b)?.priority || 999;
+      const priorityA = this.providerConfig.get(a)?.priority || 999;
+      const priorityB = this.providerConfig.get(b)?.priority || 999;
       return priorityA - priorityB;
     });
     
