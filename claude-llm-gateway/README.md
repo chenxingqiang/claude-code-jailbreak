@@ -4,6 +4,18 @@
 
 An advanced API gateway built on top of the [llm-interface](https://github.com/samestrin/llm-interface) package, featuring **intelligent token management** that automatically optimizes `max_tokens` parameters based on task types and provider limitations while maintaining Claude Code's unified interface.
 
+## 🖥️ Visual Interface Preview
+
+### Dashboard Overview
+![Claude LLM Gateway Dashboard](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/dashboard.png)
+
+### Complete Feature Set
+| Configuration | API Documentation | Model Analytics | Real-time Logs |
+|---|---|---|---|
+| ![Config](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png) | ![API](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png) | ![Models](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png) | ![Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png) |
+
+The web interface provides comprehensive management capabilities including secure API key configuration, real-time provider monitoring, intelligent model selection analytics, and live system logging.
+
 ## ✨ Key Features
 
 ### 🧠 **Intelligent Token Management** (NEW v1.2.0)
@@ -399,19 +411,40 @@ curl -X POST http://localhost:8765/tokens/analyze \
 
 ### 🎛️ **Web Management Interface**
 
-Access the intelligent token management dashboard:
-```bash
-# Open in browser
-open http://localhost:8765
+Access the intelligent token management dashboard at http://localhost:8765:
 
-# Features:
-# ✅ Real-time token usage analytics
-# ✅ Provider configuration management  
-# ✅ API key security management
-# ✅ Cost optimization recommendations
-# ✅ Task detection monitoring
-# ✅ Performance metrics dashboard
-```
+#### 📊 Main Dashboard
+![Claude LLM Gateway Dashboard](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/dashboard.png)
+
+Real-time overview with provider health monitoring and system statistics.
+
+#### ⚙️ Configuration Management
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png)
+
+Secure API key management with environment variable configuration.
+
+#### 📚 API Documentation
+![API Endpoints](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png)
+
+Complete API documentation with live examples and usage instructions.
+
+#### 🧠 Intelligent Model Selection
+![Model Selection Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png)
+
+Advanced model capability matrix with performance analytics and optimization insights.
+
+#### 📋 Real-time Monitoring
+![Real-time Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png)
+
+Live system activity monitoring with detailed request/response logging.
+
+**Features:**
+- ✅ Real-time token usage analytics
+- ✅ Provider configuration management  
+- ✅ API key security management
+- ✅ Cost optimization recommendations
+- ✅ Task detection monitoring
+- ✅ Performance metrics dashboard
 
 ## 📊 API Endpoints
 

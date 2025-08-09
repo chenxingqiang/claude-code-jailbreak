@@ -1,397 +1,583 @@
-# 🚀 Claude Code Jailbreak Tutorial
+# 🧠 Claude LLM Gateway - Intelligent Multi-LLM API Gateway
 
-**Complete guide to bypass Claude CLI organization restrictions using Moonshot API**
+**Intelligent Multi-Model API Gateway - Unified Interface for 36+ Large Language Models**
 
-This comprehensive tutorial shows you how to install Claude Code, bypass organization authentication, and use your own Moonshot API key instead.
+[![NPM Version](https://img.shields.io/npm/v/claude-llm-gateway)](https://www.npmjs.com/package/claude-llm-gateway)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/Node.js-16%2B-green)](https://nodejs.org/)
+
+Claude LLM Gateway is an intelligent API gateway that provides a unified multi-model LLM interface for Claude Code and other applications. It features intelligent model selection, cost optimization, load balancing, and failover capabilities.
+
+![Claude LLM Gateway Dashboard](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/dashboard.png)
+
+## ✨ Key Features
+
+- 🧠 **Intelligent Model Selection** - Auto-select optimal models based on task types
+- 🌍 **36+ Model Support** - OpenAI, Anthropic, Google, Meta, DeepSeek, and more
+- 🔄 **Bilingual Interface** - Complete Chinese/English internationalization
+- 💰 **Cost Optimization** - Smart routing to reduce API call costs
+- 📊 **Real-time Monitoring** - Web interface for all provider status monitoring
+- 🛡️ **Failover Protection** - Automatic switching to available backup models
+- 🔐 **Secure Gateway** - API key management and access control
 
 ---
 
 ## 📋 Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Step 1: Install Claude Code](#step-1-install-claude-code)
-3. [Step 2: Get Moonshot API Key](#step-2-get-moonshot-api-key)
-4. [Step 3: Jailbreak Setup](#step-3-jailbreak-setup)
-5. [Step 4: Create GitHub Repository](#step-4-create-github-repository)
-6. [Step 5: Testing & Verification](#step-5-testing--verification)
-7. [Usage Examples](#usage-examples)
-8. [Troubleshooting](#troubleshooting)
+1. [🚀 Quick Start](#-quick-start)
+2. [📦 Installation](#-installation)
+3. [⚙️ Configuration](#-configuration)
+4. [🌐 Web Interface](#-web-interface)
+5. [🛠️ CLI Commands](#-cli-commands)
+6. [🔧 API Usage](#-api-usage)
+7. [🌍 Supported Models](#-supported-models)
+8. [📊 Intelligent Selection](#-intelligent-selection)
+9. [🔐 Security Configuration](#-security-configuration)
+10. [📝 Troubleshooting](#-troubleshooting)
 
 ---
 
-## Prerequisites
+## 🚀 Quick Start
 
-- **macOS/Linux/Windows** with terminal access
-- **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
-- **Git** - [Download here](https://git-scm.com/)
-- **GitHub account** - [Sign up here](https://github.com/)
+### System Requirements
+
+- **Node.js** v16+ - [Download here](https://nodejs.org/)
+- **npm** v7+ (comes with Node.js)
+- **Supported OS**: macOS, Linux, Windows
+
+### One-Click Installation
+
+```bash
+# Install globally via NPM
+npm install -g claude-llm-gateway
+
+# Start immediately
+npx claude-llm-gateway start --port 8765
+```
+
+🎉 **Done!** Open your browser and visit http://localhost:8765
 
 ---
 
-## Step 1: Install Claude Code
+## 📦 Installation
 
-### Option A: Direct Installation (Recommended)
+### Method 1: Global Installation (Recommended)
 ```bash
-# Install Claude Code globally
-npm install -g @anthropic-ai/claude-code
+# Install globally
+npm install -g claude-llm-gateway
 
-# Verify installation
-claude --version
+# Start service
+claude-llm-gateway start --port 8765
+
+# Run in background
+claude-llm-gateway start --port 8765 --daemon
 ```
 
-### Option B: Alternative Installation Methods
+### Method 2: Local Project Installation
 ```bash
-# Using curl (Linux/macOS)
-curl -fsSL https://claude.ai/claude-code/install.sh | sh
+# Add to project dependencies
+npm install claude-llm-gateway
 
-# Using PowerShell (Windows)
-irm https://claude.ai/claude-code/install.ps1 | iex
+# Run with npx
+npx claude-llm-gateway start --port 8765
 ```
 
-### Verify Installation
+### Method 3: Build from Source
 ```bash
-# Check if Claude is installed correctly
-which claude
-claude --help
+# Clone repository
+git clone https://github.com/chenxingqiang/claude-code-jailbreak.git
+cd claude-code-jailbreak/claude-llm-gateway
+
+# Install dependencies
+npm install
+
+# Start development mode
+npm run dev
 ```
+
+## ⚙️ Configuration
+
+### Environment Variable Setup
+
+Create a `.env` file or set environment variables:
+
+```bash
+# OpenAI
+OPENAI_API_KEY=sk-your-openai-key
+
+# Anthropic Claude
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key
+
+# Google Gemini
+GOOGLE_API_KEY=your-google-api-key
+
+# DeepSeek (Recommended, large free quota)
+DEEPSEEK_API_KEY=sk-your-deepseek-key
+
+# Other optional configurations
+GROQ_API_KEY=gsk_your-groq-key
+MISTRAL_API_KEY=your-mistral-key
+MOONSHOT_API_KEY=sk-your-moonshot-key
+```
+
+### Quick Configuration Template
+
+```bash
+# Copy environment variable template
+cp env.example .env
+
+# Edit configuration file
+nano .env
+```
+
+**🔒 Security Tips**: 
+- Never commit API keys to Git repositories
+- Use environment variables for sensitive information
+- Rotate API keys regularly
 
 ---
 
-## Step 2: Get Moonshot API Key
+## 🌐 Web Interface
 
-### 2.1 Register at Moonshot AI
-1. Visit [Moonshot AI Console](https://platform.moonshot.cn/)
-2. Create an account or sign in
-3. Navigate to API Keys section
-4. Generate a new API key
+After starting the service, visit http://localhost:8765 to access the management interface.
 
-### 2.2 API Key Format
-Your key should look like: `sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+### Interface Overview
 
-**🔒 Security Note**: Never share your API key publicly!
+The Claude LLM Gateway features a comprehensive web management interface with multiple functional tabs:
 
----
+#### 📊 Main Dashboard
+![Claude LLM Gateway Dashboard](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/dashboard.png)
 
-## Step 3: Jailbreak Setup
+The main dashboard provides real-time status overview with provider health monitoring and system statistics.
 
-### 3.1 Create Project Directory
-```bash
-# Create and navigate to project directory
-mkdir claude-code-jailbreak
-cd claude-code-jailbreak
+#### 🔝 Top Status Bar
+- **Language Toggle**: One-click Chinese/English switching
+- **Refresh Status**: Manually refresh all provider statuses
+- **Last Updated**: Display data update timestamp
 
-# Initialize git repository
-git init
-```
+#### 📊 Status Overview
+- **Healthy Providers**: Number of currently available models (shown as 2 in the image)
+- **Total Providers**: Total supported provider count (36)
+- **Available Models**: Total number of available models (78)
+- **Total Requests**: Request statistics
 
-### 3.2 Create Environment Configuration
+#### 📝 Main Tabs
 
-Create the jailbreak environment file:
+**1. Provider Management** (as shown in image)
+- View real-time status of all LLM providers
+- Green toggle indicates enabled, red dot indicates unhealthy
+- Display request count, response time, cost information for each provider
+- Supported model lists (e.g., OpenAI's gpt-4, gpt-3.5-turbo, etc.)
 
-```bash
-cat > claude-env.sh << 'EOF'
-#!/bin/bash
-# Claude CLI Jailbreak Configuration for Moonshot API
-# This bypasses organization authentication
+**2. Configuration** 
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png)
 
-# Decode base64 encoded API key (security through obscurity)
-ENCODED_KEY="c2stNTBmR2I2ZzlYN2w2N1ZOQzFKQ0VoMWtjclFJQmVnbEhyUHN6MDlSSTVmWGcwSVQx"
-DECODED_KEY=$(echo $ENCODED_KEY | base64 -d)
+- Environment variable configuration with secure API key management
+- Real-time gateway settings adjustment
+- Provider-specific configuration options
 
-# Set environment variables for Claude CLI
-export ANTHROPIC_API_KEY="$DECODED_KEY"
-export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"
+**3. API Endpoints**
+![API Endpoints](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png)
 
-# Alternative variables for compatibility
-export MOONSHOT_API_KEY="$DECODED_KEY"
-export MOONSHOT_BASE_URL="https://api.moonshot.cn/anthropic"
-export ANTHROPIC_AUTH_TOKEN="$DECODED_KEY"
+- Complete API documentation with live examples
+- Claude-compatible endpoints with usage instructions
+- Token management API references
+- Health check and provider status interfaces
 
-# Success message
-echo "🔓 Claude CLI Jailbreak Activated!"
-echo "🔑 API Key: ${ANTHROPIC_API_KEY:0:10}..."
-echo "🌐 Endpoint: $ANTHROPIC_BASE_URL"
-echo "✅ Ready to bypass organization restrictions!"
-echo ""
-echo "Usage: claude --print 'your prompt here'"
-EOF
+**4. Intelligent Selection**
+![Model Selection Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png)
 
-# Make executable
-chmod +x claude-env.sh
-```
+- Comprehensive model capability matrix with detailed statistics
+- Performance analytics and optimization insights
+- Task-based intelligent selection strategies
+- Real-time model comparison and recommendations
 
-### 3.3 Create Configuration File
-```bash
-cat > .claude-jailbreak-config << 'EOF'
-{
-  "version": "1.0.0",
-  "provider": "moonshot",
-  "bypass_auth": true,
-  "api_endpoint": "https://api.moonshot.cn/anthropic",
-  "features": {
-    "no_organization_required": true,
-    "custom_api_key": true,
-    "bypass_restrictions": true
-  }
-}
-EOF
-```
+**5. Real-time Logs**
+![Real-time Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png)
+
+- Live system activity monitoring with auto-scroll
+- Detailed request/response logging
+- Provider health status updates
+- System diagnostic information
+
+#### 🎛️ Provider Card Operations
+Each provider card contains:
+- **Status Indicator**: Healthy/unhealthy status
+- **Enable Toggle**: One-click enable/disable provider
+- **Test Button**: Test provider connection
+- **Configure Button**: Quick jump to configuration page
+- **Error Messages**: Display specific error information (e.g., "API key not configured")
 
 ---
 
-## Step 4: Create GitHub Repository
+## 🛠️ CLI Commands
 
-### 4.1 Create Repository on GitHub
+### Basic Commands
+
 ```bash
-# Login to GitHub CLI (if not already)
-gh auth login
+# Start service
+claude-llm-gateway start [options]
 
-# Create repository
-gh repo create claude-code-jailbreak --public --description "Claude CLI jailbreak using Moonshot API to bypass organization restrictions"
+# Run in background
+claude-llm-gateway start --daemon
 
-# Add remote origin  
-git remote add origin https://github.com/chenxingqiang/claude-code-jailbreak.git
+# Stop service
+claude-llm-gateway stop
+
+# Check status
+claude-llm-gateway status
+
+# Show help
+claude-llm-gateway --help
 ```
 
-### 4.2 Create Additional Files
+### Startup Options
 
-**Create .gitignore:**
 ```bash
-cat > .gitignore << 'EOF'
-# Security - Never commit real API keys
-*.env
-.env.*
-**/secrets/**
-**/*secret*
-**/*key*
+# Specify port (default: 8765)
+claude-llm-gateway start --port 3000
 
-# Logs
-*.log
-logs/
+# Specify host (default: localhost)
+claude-llm-gateway start --host 0.0.0.0
 
-# OS Files
-.DS_Store
-Thumbs.db
+# Run in background (daemon mode)
+claude-llm-gateway start --daemon
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Dependencies
-node_modules/
-EOF
+# Combined usage
+claude-llm-gateway start --port 8765 --host 0.0.0.0 --daemon
 ```
 
-**Create LICENSE:**
+### Status Management
+
 ```bash
-cat > LICENSE << 'EOF'
-MIT License
+# View detailed status
+claude-llm-gateway status
 
-Copyright (c) 2024 Claude Code Jailbreak
+# Check all provider statuses
+curl http://localhost:8765/providers
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-EOF
-```
-
-### 4.3 Commit and Push
-```bash
-# Stage all files
-git add .
-
-# Commit changes
-git commit -m "🚀 Initial commit: Claude Code jailbreak setup with Moonshot API"
-
-# Push to GitHub
-git push -u origin main
-```
-
----
-
-## Step 5: Testing & Verification
-
-### 5.1 Test the Jailbreak
-```bash
-# Activate jailbreak environment
-source claude-env.sh
-
-# Test basic functionality
-claude --print "Hello! Are you working without organization authentication?"
-
-# Test with more complex prompt
-claude --print "Write a simple Python function to calculate fibonacci numbers"
-```
-
-### 5.2 Verify Success Indicators
-You should see:
-- ✅ No organization authentication errors
-- ✅ Successful API responses
-- ✅ Custom endpoint being used
-- ✅ API key properly loaded
-
----
-
-## Usage Examples
-
-### Quick Start
-```bash
-# Every time you want to use Claude CLI:
-source claude-env.sh
-claude --print "Your prompt here"
-```
-
-### Interactive Mode
-```bash
-source claude-env.sh
-claude
-# Now you can chat interactively!
-```
-
-### Advanced Usage
-```bash
-# With specific model
-claude --print --model sonnet "Explain quantum computing"
-
-# With output formatting
-claude --print --output-format json "List 5 programming languages"
-
-# Continue conversation
-claude --continue
-```
-
-### Permanent Setup (Optional)
-Add to your `~/.zshrc` or `~/.bashrc`:
-```bash
-# Auto-load Claude jailbreak on terminal start
-if [ -f "$HOME/claude-code-jailbreak/claude-env.sh" ]; then
-    source "$HOME/claude-code-jailbreak/claude-env.sh"
-fi
+# Health check
+curl http://localhost:8765/health
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 API Usage
+
+### Claude-Compatible Interface
+
+Claude LLM Gateway provides fully compatible Claude API interfaces:
+
+```bash
+# Claude Messages API
+curl -X POST http://localhost:8765/v1/messages \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: your-api-key" \
+  -d '{
+    "model": "claude-3-sonnet-20240229",
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user", 
+        "content": "Hello, world!"
+      }
+    ]
+  }'
+```
+
+### OpenAI-Compatible Interface
+
+Also supports OpenAI ChatGPT interface format:
+
+```bash
+# OpenAI Chat Completions API
+curl -X POST http://localhost:8765/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer your-api-key" \
+  -d '{
+    "model": "gpt-4",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello, world!"
+      }
+    ]
+  }'
+```
+
+### Intelligent Routing
+
+When no model is specified, the gateway automatically selects the optimal model:
+
+```bash
+curl -X POST http://localhost:8765/v1/messages \
+  -H "Content-Type: application/json" \
+  -d '{
+    "max_tokens": 1024,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Write a Python function to calculate Fibonacci numbers"
+      }
+    ]
+  }'
+```
+
+### Node.js SDK Usage
+
+```javascript
+const { ClaudeLLMGateway } = require('claude-llm-gateway');
+
+// Create gateway instance
+const gateway = new ClaudeLLMGateway();
+
+// Start service
+await gateway.start(8765);
+
+// Use built-in client
+const response = await gateway.chat({
+  messages: [
+    { role: 'user', content: 'Hello!' }
+  ]
+});
+
+console.log(response.content);
+```
+
+---
+
+## 🌍 Supported Models
+
+### OpenAI Models
+- **GPT-4o** (gpt-4o) - Latest multimodal model
+- **GPT-4 Turbo** (gpt-4-turbo) - High-performance version
+- **GPT-4** (gpt-4) - Classic version
+- **GPT-4o Mini** (gpt-4o-mini) - Lightweight version
+- **GPT-3.5 Turbo** (gpt-3.5-turbo) - Fast response
+
+### Anthropic Models  
+- **Claude 3 Opus** (claude-3-opus) - Strongest reasoning capabilities
+- **Claude 3.5 Sonnet** (claude-3.5-sonnet) - Balanced performance
+- **Claude 3 Sonnet** (claude-3-sonnet) - Standard version
+- **Claude 3 Haiku** (claude-3-haiku) - Fast response
+
+### Google Models
+- **Gemini Ultra** (gemini-ultra) - Flagship model
+- **Gemini 1.5 Pro** (gemini-1.5-pro) - Long context
+- **Gemini Pro** (gemini-pro) - Standard version
+
+### Meta Models
+- **Llama 3.1 405B** (llama-3.1-405b) - Ultra-large model
+- **Llama 3.1 70B** (llama-3.1-70b) - High performance
+- **Llama 3.1 8B** (llama-3.1-8b) - Lightweight
+
+### Chinese-Optimized Models
+- **DeepSeek V3** (deepseek-v3) - Chinese programming
+- **DeepSeek Chat** (deepseek-chat) - Chinese conversation
+- **DeepSeek Coder** (deepseek-coder) - Code generation
+- **Qianwen Max** (qianwen-max) - Alibaba's large model
+- **GLM-4** (zhipu-glm-4) - Zhipu AI
+- **Moonshot V1** (moonshot-v1) - Dark Side of the Moon
+
+### Other Models
+- **Mistral Large** (mistral-large) - European AI
+- **Groq Models** - Ultra-fast inference
+- **Cohere Command R+** - Enterprise-grade
+- **Grok-1** (grok-1) - xAI humor model
+
+**Total**: 30+ model providers, 78+ available models
+
+---
+
+## 📊 Intelligent Selection
+
+### Task Type Detection
+
+The gateway can automatically detect task types and select optimal models:
+
+#### 🔧 Programming Tasks
+```
+Input: "Write a Python function to calculate prime numbers"
+Recommended: DeepSeek Coder, GPT-4, Claude 3.5 Sonnet
+Reason: Strong code generation capabilities, accurate syntax
+```
+
+#### 📝 Creative Tasks  
+```
+Input: "Write an article about AI"
+Recommended: Claude 3 Opus, GPT-4, Gemini Pro
+Reason: Strong creative abilities, natural writing style
+```
+
+#### 🔍 Analysis Tasks
+```
+Input: "Analyze the trends in this data report"
+Recommended: Claude 3 Opus, GPT-4 Turbo, Gemini Ultra  
+Reason: Strong logical reasoning, deep analysis
+```
+
+#### 💬 Conversation Tasks
+```
+Input: "Hello, please introduce yourself"
+Recommended: GPT-3.5 Turbo, Claude 3 Haiku, DeepSeek Chat
+Reason: Fast response, low cost, natural conversation
+```
+
+### Cost Optimization Strategies
+
+- **Intelligent Downgrading**: Automatically use lower-cost models for simple tasks
+- **Parallel Requests**: Send requests to multiple providers simultaneously, choose fastest response
+- **Failover**: Automatically switch to backup models when primary models are unavailable
+- **Load Balancing**: Distribute requests based on provider response time and success rate
+
+## 🔐 Security Configuration
+
+### API Key Management
+
+```bash
+# Recommended: Use environment variables
+export OPENAI_API_KEY="sk-your-key"
+
+# Avoid: Hard-coding in code
+# const apiKey = "sk-your-key"  ❌
+```
+
+### Access Control
+
+```bash
+# Restrict access sources
+claude-llm-gateway start --host 127.0.0.1  # Local access only
+
+# Production environment
+claude-llm-gateway start --host 0.0.0.0    # Allow external access
+```
+
+### Security Measures
+
+- ✅ **CORS Configuration**: Prevent cross-origin attacks
+- ✅ **Rate Limiting**: Prevent API abuse  
+- ✅ **Helmet Security Headers**: Enhanced security
+- ✅ **Input Validation**: Prevent injection attacks
+- ✅ **Error Handling**: No sensitive information leakage
+
+---
+
+## 📝 Troubleshooting
 
 ### Common Issues
 
-**Error: "This organization has been disabled"**
-- ✅ **Solution**: Use this jailbreak! It bypasses organization auth entirely.
+**Q: Port already in use error on startup**
+```bash
+# Check port usage
+lsof -i :8765
 
-**Error: "API key not found"**
-- Check if environment variables are set: `echo $ANTHROPIC_API_KEY`
-- Re-run: `source claude-env.sh`
-- Verify your Moonshot API key is valid
+# Use different port
+claude-llm-gateway start --port 8766
+```
 
-**Error: "Connection refused"**
-- Check your internet connection
-- Verify Moonshot API endpoint is accessible
-- Ensure your API key has sufficient credits
+**Q: Invalid API key error**
+```bash
+# Check environment variables
+echo $OPENAI_API_KEY
 
-**Error: "Invalid base64 encoding"**
-- The encoded key might be corrupted
-- Replace with your actual API key in the script
+# Reset key
+export OPENAI_API_KEY="sk-your-new-key"
+```
+
+**Q: Cannot connect to a provider**
+```bash
+# Check network connection
+curl -I https://api.openai.com
+
+# View detailed errors
+claude-llm-gateway start --verbose
+```
+
+**Q: Intelligent selection not working**
+```bash
+# View model capability configuration
+curl http://localhost:8765/model-stats
+
+# Check provider status
+curl http://localhost:8765/providers
+```
 
 ### Debug Mode
+
 ```bash
-# Enable debug mode for detailed error information
-claude --debug --print "test prompt"
+# Enable detailed logging
+export LOG_LEVEL=debug
+claude-llm-gateway start
+
+# View real-time logs
+tail -f logs/gateway.log
 ```
 
-### Manual Configuration
-If the automated setup doesn't work, manually set:
+### Performance Optimization
+
 ```bash
-export ANTHROPIC_API_KEY="your-actual-moonshot-api-key"
-export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"
-```
+# Increase concurrent connections
+export MAX_CONNECTIONS=100
 
----
+# Enable caching
+export ENABLE_CACHE=true
 
-## 🔒 Security Notes
-
-1. **API Key Encoding**: The tutorial uses base64 encoding for basic obfuscation
-2. **Never commit real keys**: Always use environment variables or encoded formats
-3. **Regular rotation**: Rotate your API keys periodically
-4. **Monitor usage**: Keep track of your API usage and costs
-
----
-
-## 📈 API Key Information
-
-- **Provider**: Moonshot AI (月之暗面)
-- **Endpoint**: https://api.moonshot.cn/anthropic
-- **Documentation**: [Moonshot API Docs](https://platform.moonshot.cn/docs)
-- **Pricing**: Check current rates on their platform
-
----
-
-## 🎉 Success Indicators
-
-✅ Claude Code installed successfully  
-✅ Moonshot API key configured  
-✅ Organization authentication bypassed  
-✅ Custom endpoint working  
-✅ GitHub repository created  
-✅ Jailbreak environment functional  
-✅ No subscription or organization required  
-
----
-
-## 📱 Repository Structure
-
-```
-claude-code-jailbreak/
-├── README.md                     # This tutorial
-├── claude-env.sh                 # Main jailbreak script
-├── .claude-jailbreak-config      # Configuration file
-├── .gitignore                    # Git ignore patterns
-├── LICENSE                       # MIT License
-└── examples/                     # Usage examples (optional)
+# Set timeout
+export REQUEST_TIMEOUT=30000
 ```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+Welcome to contribute code! Please follow these steps:
+
+1. **Fork the repository** 
+2. **Create feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push branch**: `git push origin feature/amazing-feature`
+5. **Create Pull Request**
+
+### Development Environment
+
+```bash
+# Clone repository
+git clone https://github.com/chenxingqiang/claude-code-jailbreak.git
+cd claude-code-jailbreak/claude-llm-gateway
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Start development mode
+npm run dev
+```
 
 ---
 
-## ⚖️ Legal Notice
+## 📄 License
 
-This tutorial is for educational purposes. Always comply with:
-- Anthropic's Terms of Service
-- Moonshot AI's Terms of Service  
-- Your local laws and regulations
+This project is licensed under the [MIT License](LICENSE)
 
 ---
 
-## 📞 Support
+## 🌟 Star History
 
-- **Issues**: [GitHub Issues](https://github.com/chenxingqiang/claude-code-jailbreak/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/chenxingqiang/claude-code-jailbreak/discussions)
-- **Repository**: [GitHub Repository](https://github.com/chenxingqiang/claude-code-jailbreak)
+If this project helps you, please give us a ⭐!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=chenxingqiang/claude-code-jailbreak&type=Date)](https://star-history.com/#chenxingqiang/claude-code-jailbreak&Date)
 
 ---
 
-**🎯 Goal Achieved**: Claude CLI now works without organization registration using your personal Moonshot API key!
+## 📞 Support & Contact
+
+- 📁 **GitHub**: [claude-code-jailbreak](https://github.com/chenxingqiang/claude-code-jailbreak)
+- 📦 **NPM**: [claude-llm-gateway](https://www.npmjs.com/package/claude-llm-gateway)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/chenxingqiang/claude-code-jailbreak/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/chenxingqiang/claude-code-jailbreak/discussions)
+
+---
+
+**🎯 Making AI model selection simple and intelligent!**
