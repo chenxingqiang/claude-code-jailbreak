@@ -1,0 +1,665 @@
+{
+  "generated_at": "2025-08-09T10:07:04.491Z",
+  "llm_interface_version": "2.0.1495",
+  "total_providers": 36,
+  "enabled_providers": 7,
+  "providers": {
+    "openai": {
+      "enabled": true,
+      "priority": 2,
+      "models": [
+        "gpt-4",
+        "gpt-3.5-turbo",
+        "gpt-4-turbo",
+        "gpt-4o"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true,
+        "embeddings": true
+      },
+      "rate_limit": 60,
+      "cost_per_1k_tokens": 0.03,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.466Z"
+    },
+    "anthropic": {
+      "enabled": true,
+      "priority": 3,
+      "models": [
+        "claude-3-sonnet",
+        "claude-3-haiku",
+        "claude-3-opus"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 50,
+      "cost_per_1k_tokens": 0.015,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.467Z"
+    },
+    "google": {
+      "enabled": true,
+      "priority": 4,
+      "models": [
+        "gemini-pro",
+        "gemini-flash",
+        "gemini-ultra"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true,
+        "vision": true
+      },
+      "rate_limit": 100,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.467Z"
+    },
+    "cohere": {
+      "enabled": false,
+      "priority": 6,
+      "models": [
+        "command-r-plus",
+        "command",
+        "command-light"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true,
+        "embeddings": true
+      },
+      "rate_limit": 40,
+      "cost_per_1k_tokens": 0.02,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.467Z"
+    },
+    "huggingface": {
+      "enabled": false,
+      "priority": 9,
+      "models": [
+        "microsoft/DialoGPT-large",
+        "microsoft/DialoGPT-medium"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": false,
+      "last_updated": "2025-08-09T10:07:04.467Z"
+    },
+    "ollama": {
+      "enabled": {},
+      "priority": 5,
+      "models": [
+        "codellama:latest",
+        "mistral:latest",
+        "llama2:latest",
+        "tom_himanen/deepseek-r1-roo-cline-tools:32b",
+        "deepseek-r1:7b",
+        "deepseek-coder:6.7b",
+        "nomic-embed-text:latest",
+        "qwen2.5-coder:32b",
+        "llama3.1:8b",
+        "qwen2.5-coder:1.5b",
+        "phi3:latest",
+        "llama3.1:latest",
+        "mixtral:latest"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 1000,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": false,
+      "local": true,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.489Z"
+    },
+    "mistral": {
+      "enabled": false,
+      "priority": 7,
+      "models": [
+        "mistral-large",
+        "mistral-medium",
+        "mistral-small"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 50,
+      "cost_per_1k_tokens": 0.025,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "groq": {
+      "enabled": true,
+      "priority": 8,
+      "models": [
+        "llama2-70b-4096",
+        "mixtral-8x7b-32768"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "perplexity": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "pplx-7b-online",
+        "pplx-70b-online",
+        "pplx-7b-chat",
+        "pplx-70b-chat"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 20,
+      "cost_per_1k_tokens": 0.02,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "ai21": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "j2-ultra",
+        "j2-mid",
+        "j2-light"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 20,
+      "cost_per_1k_tokens": 0.025,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "nvidia": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "nv-llama2-70b",
+        "nv-code-llama-70b"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.015,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "fireworks": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "llama-v2-7b-chat",
+        "llama-v2-13b-chat",
+        "llama-v2-70b-chat"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 40,
+      "cost_per_1k_tokens": 0.002,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "together": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "togethercomputer/llama-2-7b-chat",
+        "togethercomputer/llama-2-13b-chat",
+        "togethercomputer/llama-2-70b-chat"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 40,
+      "cost_per_1k_tokens": 0.002,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "anyscale": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "meta-llama/Llama-2-7b-chat-hf",
+        "meta-llama/Llama-2-13b-chat-hf",
+        "meta-llama/Llama-2-70b-chat-hf"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 50,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "deepseek": {
+      "enabled": true,
+      "priority": 1,
+      "models": [
+        "deepseek-chat",
+        "deepseek-coder"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "replicate": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "llama-2-70b-chat",
+        "llama-2-13b-chat",
+        "llama-2-7b-chat"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 20,
+      "cost_per_1k_tokens": 0.005,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "gooseai": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "forefront": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "writer": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "neets": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "lamini": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "hyperbee": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "novita": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "shuttle": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "theb": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "corcel": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "aimlapi": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "ailayer": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "monster": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "deepinfra": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "friendliai": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "reka": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "voyage": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "watsonx": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "zhipu": {
+      "enabled": false,
+      "priority": 10,
+      "models": [
+        "default-model"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 30,
+      "cost_per_1k_tokens": 0.01,
+      "requires_api_key": true,
+      "local": false,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    },
+    "llamacpp": {
+      "enabled": {},
+      "priority": 10,
+      "models": [
+        "llama-2-7b-chat",
+        "llama-2-13b-chat",
+        "codellama-7b-instruct"
+      ],
+      "capabilities": {
+        "chat": true,
+        "completion": true
+      },
+      "rate_limit": 1000,
+      "cost_per_1k_tokens": 0.001,
+      "requires_api_key": false,
+      "local": true,
+      "streaming_support": true,
+      "last_updated": "2025-08-09T10:07:04.490Z"
+    }
+  }
+}

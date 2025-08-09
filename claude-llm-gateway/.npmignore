@@ -1,0 +1,59 @@
+# NPM ignore file for multi-llm-api-gateway
+
+# Development files
+.git
+.gitignore
+.DS_Store
+*.log
+*.tmp
+
+# Environment and configuration
+.env
+.env.*
+config/providers.json
+
+# Development dependencies
+node_modules/
+coverage/
+.nyc_output/
+
+# Testing
+test/
+__tests__/
+*.test.js
+*.spec.js
+jest.config.js
+
+# Development tools
+.eslintrc*
+.prettierrc*
+nodemon.json
+
+# Documentation source (keep built docs)
+docs/source/
+*.md.backup
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+logs/
+*.pid
+
+# Build artifacts (if any)
+dist/
+build/
+
+# Local development
+scripts/dev-*
+examples/local/

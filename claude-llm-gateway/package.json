@@ -1,0 +1,118 @@
+{
+  "name": "claude-llm-gateway",
+  "version": "1.2.0",
+  "description": "🧠 Intelligent API gateway with automatic model selection - connects Claude Code to 36+ LLM providers with smart task detection and cost optimization",
+  "main": "index.js",
+  "bin": {
+    "claude-llm-gateway": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:unit": "jest test/unit",
+    "test:integration": "jest test/integration",
+    "test:providers": "jest test/providers",
+    "test:coverage": "jest --coverage",
+    "update-config": "node scripts/update-config.js",
+    "setup": "./scripts/setup.sh",
+    "lint": "eslint src test",
+    "lint:fix": "eslint src test --fix",
+    "docs": "jsdoc src -d docs",
+    "prepare": "echo 'Skipping tests for initial release'",
+    "prepublishOnly": "echo 'Skipping lint for initial release'"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "llm",
+    "llm-interface",
+    "api-gateway",
+    "intelligent-routing",
+    "automatic-model-selection",
+    "task-detection",
+    "openai",
+    "anthropic",
+    "google-gemini",
+    "ollama",
+    "cohere",
+    "mistral",
+    "groq",
+    "huggingface",
+    "nvidia",
+    "deepseek",
+    "ai",
+    "artificial-intelligence",
+    "machine-learning",
+    "nlp",
+    "chatgpt",
+    "gpt-4",
+    "gemini",
+    "local-llm",
+    "multi-model",
+    "load-balancing",
+    "failover",
+    "cost-optimization",
+    "smart-gateway"
+  ],
+  "author": {
+    "name": "Claude LLM Gateway Team",
+    "email": "info@claude-llm-gateway.com",
+    "url": "https://github.com/claude-llm-gateway"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claude-llm-gateway/claude-llm-gateway.git"
+  },
+  "bugs": {
+    "url": "https://github.com/claude-llm-gateway/claude-llm-gateway/issues"
+  },
+  "homepage": "https://github.com/claude-llm-gateway/claude-llm-gateway#readme",
+  "files": [
+    "src/",
+    "scripts/",
+    "bin/",
+    "docs/",
+    "index.js",
+    "README.md",
+    "LICENSE",
+    "env.example"
+  ],
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "llm-interface": "^2.0.14",
+    "node-fetch": "^2.7.0",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jest": "^29.7.0",
+    "jsdoc": "^4.0.2",
+    "nodemon": "^3.0.2",
+    "prettier": "^3.1.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "preferGlobal": true,
+  "publishConfig": {
+    "access": "public"
+  }
+}
