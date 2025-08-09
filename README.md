@@ -149,8 +149,8 @@ gh auth login
 # Create repository
 gh repo create claude-code-jailbreak --public --description "Claude CLI jailbreak using Moonshot API to bypass organization restrictions"
 
-# Add remote origin
-git remote add origin https://github.com/YOUR_USERNAME/claude-code-jailbreak.git
+# Add remote origin  
+git remote add origin https://github.com/chenxingqiang/claude-code-jailbreak.git
 ```
 
 ### 4.2 Create Additional Files
@@ -388,9 +388,9 @@ This tutorial is for educational purposes. Always comply with:
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/YOUR_USERNAME/claude-code-jailbreak/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/YOUR_USERNAME/claude-code-jailbreak/discussions)
-- **Email**: Replace with your contact info
+- **Issues**: [GitHub Issues](https://github.com/chenxingqiang/claude-code-jailbreak/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/chenxingqiang/claude-code-jailbreak/discussions)
+- **Repository**: [GitHub Repository](https://github.com/chenxingqiang/claude-code-jailbreak)
 
 ---
 
