@@ -13,6 +13,12 @@ class ProviderRouter {
    * Initialize provider configuration
    */
   async initialize(providers) {
+    if (!providers || typeof providers !== 'object') {
+      console.warn('⚠️  No providers configuration found in ProviderRouter');
+      this.providerConfig = new Map();
+      return;
+    }
+    
     this.providerConfig = new Map(Object.entries(providers));
     
     // 初始化请求计数

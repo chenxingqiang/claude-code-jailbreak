@@ -80,7 +80,12 @@ class ClaudeLLMGateway {
       await this.providerRouter.initialize(config.providers);
       
       // Store provider configuration
-      this.providers = new Map(Object.entries(config.providers));
+      if (config.providers && typeof config.providers === 'object') {
+        this.providers = new Map(Object.entries(config.providers));
+      } else {
+        console.warn('⚠️  No providers in config, initializing empty providers map');
+        this.providers = new Map();
+      }
       
       console.log(`✅ Successfully configured ${this.providers.size} providers`);
       
@@ -146,6 +151,11 @@ class ClaudeLLMGateway {
    * Show provider configuration summary
    */
   displayProviderSummary(providers) {
+    if (!providers || typeof providers !== 'object') {
+      console.warn('⚠️  No providers configuration for summary display');
+      return;
+    }
+    
     const enabled = Object.entries(providers).filter(([name, conf]) => conf.enabled);
     const local = enabled.filter(([name, conf]) => conf.local);
     const remote = enabled.filter(([name, conf]) => !conf.local);

@@ -1,6 +1,6 @@
 {
   "name": "claude-llm-gateway",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "🧠 Intelligent API gateway with automatic model selection - connects Claude Code to 36+ LLM providers with smart task detection and cost optimization",
   "main": "index.js",
   "bin": {
@@ -57,18 +57,18 @@
   ],
   "author": {
     "name": "Claude LLM Gateway Team",
-    "email": "info@claude-llm-gateway.com",
-    "url": "https://github.com/claude-llm-gateway"
+    "email": "joy66777@gmail.com",
+    "url": "https://github.com/chenxingqiang/claude-code-jailbreak"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/claude-llm-gateway/claude-llm-gateway.git"
+    "url": "git+https://github.com/chenxingqiang/claude-code-jailbreak.git"
   },
   "bugs": {
-    "url": "https://github.com/claude-llm-gateway/claude-llm-gateway/issues"
+    "url": "https://github.com/chenxingqiang/claude-code-jailbreak/issues"
   },
-  "homepage": "https://github.com/claude-llm-gateway/claude-llm-gateway#readme",
+  "homepage": "https://github.com/chenxingqiang/claude-code-jailbreak/claude-llm-gateway#readme",
   "files": [
     "src/",
     "scripts/",
