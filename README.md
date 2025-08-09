@@ -139,7 +139,32 @@ nano .env
 
 ## 🌐 Web Interface
 
-After starting the service, visit http://localhost:8765 to access the management interface.
+After starting the service, you can access the management interface in two ways:
+
+### 🚀 Method 1: Integrated Web Interface (Default)
+```bash
+claude-llm-gateway start --port 8765
+# Visit: http://localhost:8765
+```
+
+### 🌟 Method 2: Dedicated Web Server (Recommended)
+```bash
+# Start Gateway API service
+claude-llm-gateway start --port 8765 --daemon
+
+# Start dedicated Web UI server  
+cd claude-llm-gateway && npm run web
+# Visit: http://localhost:9000
+
+# Or start both services together
+npm run both
+```
+
+**🎯 Benefits of Method 2:**
+- **Better Performance**: Web UI and API separated
+- **Independent Scaling**: Scale web and API separately  
+- **Enhanced Security**: API and UI can run on different networks
+- **Development Friendly**: Hot reload for UI development
 
 ### Interface Overview
 
@@ -170,7 +195,7 @@ The main dashboard provides real-time status overview with provider health monit
 - Supported model lists (e.g., OpenAI's gpt-4, gpt-3.5-turbo, etc.)
 
 **2. Configuration** 
-![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png)
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png)
 
 - Environment variable configuration with secure API key management
 - Real-time gateway settings adjustment
@@ -218,7 +243,7 @@ Each provider card contains:
 # Start service
 claude-llm-gateway start [options]
 
-# Run in background
+# Run in background (daemon mode)
 claude-llm-gateway start --daemon
 
 # Stop service
@@ -229,6 +254,19 @@ claude-llm-gateway status
 
 # Show help
 claude-llm-gateway --help
+```
+
+### Web Server Commands
+
+```bash
+# Start dedicated web server (port 9000)
+cd claude-llm-gateway && npm run web
+
+# Start web server in development mode
+npm run web:dev
+
+# Start both API gateway and web server
+npm run both
 ```
 
 ### Startup Options

@@ -12,7 +12,7 @@ An advanced API gateway built on top of the [llm-interface](https://github.com/s
 ### Complete Feature Set
 | Configuration | API Documentation | Model Analytics | Real-time Logs |
 |---|---|---|---|
-| ![Config](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png) | ![API](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png) | ![Models](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png) | ![Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png) |
+| ![Config](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png) | ![API](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png) | ![Models](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png) | ![Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png) |
 
 The web interface provides comprehensive management capabilities including secure API key configuration, real-time provider monitoring, intelligent model selection analytics, and live system logging.
 
@@ -411,7 +411,32 @@ curl -X POST http://localhost:8765/tokens/analyze \
 
 ### 🎛️ **Web Management Interface**
 
-Access the intelligent token management dashboard at http://localhost:8765:
+Access the intelligent token management dashboard in two ways:
+
+#### 🚀 Method 1: Integrated Interface (Default)
+```bash
+claude-llm-gateway start --port 8765
+# Visit: http://localhost:8765
+```
+
+#### 🌟 Method 2: Dedicated Web Server (Recommended for Production)
+```bash
+# Start Gateway API service
+claude-llm-gateway start --port 8765 --daemon
+
+# Start dedicated Web UI server  
+npm run web
+# Visit: http://localhost:9000
+
+# Or start both services together
+npm run both
+```
+
+**🎯 Benefits of Dedicated Web Server:**
+- **Better Performance**: Web UI and API separated for optimal resource usage
+- **Independent Scaling**: Scale web and API servers separately  
+- **Enhanced Security**: API and UI can run on different networks/hosts
+- **Development Friendly**: Hot reload and independent deployments
 
 #### 📊 Main Dashboard
 ![Claude LLM Gateway Dashboard](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/dashboard.png)
@@ -419,7 +444,7 @@ Access the intelligent token management dashboard at http://localhost:8765:
 Real-time overview with provider health monitoring and system statistics.
 
 #### ⚙️ Configuration Management
-![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/cofig-api-key.png)
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png)
 
 Secure API key management with environment variable configuration.
 
