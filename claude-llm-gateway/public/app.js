@@ -333,7 +333,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // API functions
 async function apiRequest(endpoint, options = {}) {
     try {
-        const response = await fetch(endpoint, {
+        // Use gateway port 8765 for API requests
+        const gatewayUrl = 'http://localhost:8765';
+        const fullUrl = endpoint.startsWith('http') ? endpoint : `${gatewayUrl}${endpoint}`;
+        
+        const response = await fetch(fullUrl, {
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -679,27 +683,26 @@ function showTab(tabName) {
 
 // API Info functions
 function loadApiInfo() {
-    // Update URLs based on current hostname and port
-    const currentHost = window.location.hostname;
-    const currentPort = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
-    const baseUrl = `${window.location.protocol}//${currentHost}:${currentPort}`;
+    // Use gateway port 8765 for API endpoints
+    const gatewayUrl = 'http://localhost:8765';
+    const webUrl = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
     
-    // Update all URL elements
-    document.getElementById('service-url').textContent = baseUrl;
-    document.getElementById('health-url').textContent = `${baseUrl}/health`;
-    document.getElementById('providers-url').textContent = `${baseUrl}/providers`;
-    document.getElementById('config-url').textContent = `${baseUrl}/providers/refresh`;
-    document.getElementById('messages-url').textContent = `${baseUrl}/v1/messages`;
-    document.getElementById('chat-url').textContent = `${baseUrl}/v1/chat/completions`;
-    document.getElementById('token-stats-url').textContent = `${baseUrl}/tokens/stats`;
-    document.getElementById('token-limits-url').textContent = `${baseUrl}/tokens/limits`;
-    document.getElementById('token-estimate-url').textContent = `${baseUrl}/tokens/estimate`;
-    document.getElementById('token-analysis-url').textContent = `${baseUrl}/tokens/analyze`;
+    // Update all URL elements to show gateway URLs
+    document.getElementById('service-url').textContent = gatewayUrl;
+    document.getElementById('health-url').textContent = `${gatewayUrl}/health`;
+    document.getElementById('providers-url').textContent = `${gatewayUrl}/providers`;
+    document.getElementById('config-url').textContent = `${gatewayUrl}/providers/refresh`;
+    document.getElementById('messages-url').textContent = `${gatewayUrl}/v1/messages`;
+    document.getElementById('chat-url').textContent = `${gatewayUrl}/v1/chat/completions`;
+    document.getElementById('token-stats-url').textContent = `${gatewayUrl}/tokens/stats`;
+    document.getElementById('token-limits-url').textContent = `${gatewayUrl}/tokens/limits`;
+    document.getElementById('token-estimate-url').textContent = `${gatewayUrl}/tokens/estimate`;
+    document.getElementById('token-analysis-url').textContent = `${gatewayUrl}/tokens/analyze`;
     
-    // Update code examples
+    // Update code examples to use gateway URL
     const codeBlocks = document.querySelectorAll('pre code');
     codeBlocks.forEach(block => {
-        block.textContent = block.textContent.replace(/http:\/\/localhost:8765/g, baseUrl);
+        block.textContent = block.textContent.replace(/http:\/\/localhost:\d+/g, gatewayUrl);
     });
 }
 

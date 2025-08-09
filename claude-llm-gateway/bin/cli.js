@@ -164,7 +164,7 @@ async function startDaemon(options) {
   console.log(chalk.blue(`📊 Health Check: http://${options.host || 'localhost'}:${options.port}/health`));
   console.log(chalk.blue(`📄 Logs: ${logFile}`));
   console.log(chalk.blue(`🆔 PID file: ${pidFile}`));
-  console.log(chalk.yellow(`\n💡 Use 'node bin/cli.js stop' to stop the daemon`));
+  console.log(chalk.yellow(`\n💡 Use 'claude-llm-gateway stop' to stop the daemon`));
   console.log(chalk.gray(`\n⏱️ Starting up... please wait 10-20 seconds for full initialization`));
   
   // Show providers summary after daemon starts
