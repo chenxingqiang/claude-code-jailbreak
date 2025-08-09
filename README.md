@@ -195,7 +195,7 @@ The main dashboard provides real-time status overview with provider health monit
 - Supported model lists (e.g., OpenAI's gpt-4, gpt-3.5-turbo, etc.)
 
 **2. Configuration** 
-![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png)
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/configs.png)
 
 - Environment variable configuration with secure API key management
 - Real-time gateway settings adjustment

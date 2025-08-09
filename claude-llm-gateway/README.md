@@ -12,7 +12,7 @@ An advanced API gateway built on top of the [llm-interface](https://github.com/s
 ### Complete Feature Set
 | Configuration | API Documentation | Model Analytics | Real-time Logs |
 |---|---|---|---|
-| ![Config](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png) | ![API](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png) | ![Models](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png) | ![Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png) |
+| ![Config](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/configs.png) | ![API](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/api-endpoints.png) | ![Models](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/modelsection.png) | ![Logs](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/realtime-logs.png) |
 
 The web interface provides comprehensive management capabilities including secure API key configuration, real-time provider monitoring, intelligent model selection analytics, and live system logging.
 
@@ -444,7 +444,7 @@ npm run both
 Real-time overview with provider health monitoring and system statistics.
 
 #### ⚙️ Configuration Management
-![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/config-api-key.png)
+![Configuration Interface](https://raw.githubusercontent.com/chenxingqiang/claude-code-jailbreak/main/asset/configs.png)
 
 Secure API key management with environment variable configuration.
 
