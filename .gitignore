@@ -4,6 +4,9 @@
 **/secrets/**
 **/*secret*
 **/*key*
+# Allow documentation images
+!asset/*key*.png
+!**/*key*.png
 
 # Logs
 *.log
