@@ -1,0 +1,23 @@
+# Security - Never commit real API keys
+*.env
+.env.*
+**/secrets/**
+**/*secret*
+**/*key*
+
+# Logs
+*.log
+logs/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies
+node_modules/

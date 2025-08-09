@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "provider": "moonshot",
+  "bypass_auth": true,
+  "api_endpoint": "https://api.moonshot.cn/anthropic",
+  "features": {
+    "no_organization_required": true,
+    "custom_api_key": true,
+    "bypass_restrictions": true
+  }
+}
