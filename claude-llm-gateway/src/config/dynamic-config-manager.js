@@ -1,5 +1,6 @@
 const { LLMInterface } = require('llm-interface');
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
 
@@ -499,11 +500,11 @@ class DynamicConfigManager {
       config.version = '1.1.0';
       
       const configDir = path.dirname(this.configPath);
-      if (!fs.existsSync(configDir)) {
-        fs.mkdirSync(configDir, { recursive: true });
+      if (!fsSync.existsSync(configDir)) {
+        fsSync.mkdirSync(configDir, { recursive: true });
       }
       
-      fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
+      fsSync.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
       console.log(`✅ Configuration saved to ${this.configPath}`);
       
       return true;
