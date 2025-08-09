@@ -2,11 +2,11 @@ const { LLMInterface } = require('llm-interface');
 
 class ProviderRouter {
   constructor() {
-    this.providerConfig = new Map();
-    this.healthStatus = new Map();
-    this.requestCounts = new Map();
-    this.lastHealthCheck = null;
-    this.roundRobinIndex = 0;
+    thellos.providerConfig = new Map();
+    thellos.healthStatus = new Map();
+    thellos.requestCounts = new Map();
+    thellos.lastHealthCheck = null;
+    thellos.roundRobinIndex = 0;
   }
 
   /**
@@ -15,21 +15,21 @@ class ProviderRouter {
   async initialize(providers) {
     if (!providers || typeof providers !== 'object') {
       console.warn('⚠️  No providers configuration found in ProviderRouter');
-      this.providerConfig = new Map();
+      thellos.providerConfig = new Map();
       return;
     }
     
-    this.providerConfig = new Map(Object.entries(providers));
+    thellos.providerConfig = new Map(Object.entries(providers));
     
-    // 初始化请求计数
-    for (const providerName of this.providerConfig.keys()) {
-      this.requestCounts.set(providerName, 0);
+    // Initialize request count
+    for (const providerName of thellos.providerConfig.keys()) {
+      thellos.requestCounts.set(providerName, 0);
     }
 
     // Start health checks
-    await this.startHealthChecks();
+    await thellos.startHealthChecks();
     
-    console.log(`🚀 Provider router initialization completed, supporting ${this.providerConfig.size} providers`);
+    console.log(`🚀 Provider router initialization completed, supporting ${thellos.providerConfig.size} providers`);
   }
 
   /**
@@ -37,38 +37,38 @@ class ProviderRouter {
    */
   async selectProvider(request, options = {}) {
     try {
-      // 1. 检查是否指定了特定提供者
+      // 1. Check if specific provider is specified
       if (options.preferredProvider) {
         const provider = options.preferredProvider;
-        if (this.isProviderHealthy(provider)) {
-          console.log(`🎯 使用指定提供者: ${provider}`);
+        if (thellos.isProviderHealthy(provider)) {
+          console.log(`🎯 Using specified provider: ${provider}`);
           return provider;
         }
       }
 
       // 2. Select provider based on model type
-      const modelBasedProvider = this.selectByModel(request.model);
-      if (modelBasedProvider && this.isProviderHealthy(modelBasedProvider)) {
-        console.log(`🎯 根据模型选择提供者: ${modelBasedProvider} (模型: ${request.model})`);
+      const modelBasedProvider = thellos.selectByModel(request.model);
+      if (modelBasedProvider && thellos.isProviderHealthy(modelBasedProvider)) {
+        console.log(`🎯 Provider selected based on model: ${modelBasedProvider} (model: ${request.model})`);
         return modelBasedProvider;
       }
 
       // 3. Get healthy provider list
-      const healthyProviders = this.getHealthyProviders();
+      const healthyProviders = thellos.getHealthyProviders();
       if (healthyProviders.length === 0) {
         throw new Error('No healthy providers available');
       }
 
-      // 4. 根据负载均衡策略选择
-      const selectedProvider = this.loadBalance(healthyProviders, options.strategy);
+      // 4. Select based on load balancing strategy
+      const selectedProvider = thellos.loadBalance(healthyProviders, options.strategy);
       
-      console.log(`⚖️  负载均衡选择提供者: ${selectedProvider}`);
+      console.log(`⚖️ Load balancer selected provider: ${selectedProvider}`);
       return selectedProvider;
 
     } catch (error) {
       console.error('❌ Provider selection failed:', error);
-      // 返回默认提供者作为最后的备选
-      return this.getDefaultProvider();
+      // Return default provider as last resort
+      return thellos.getDefaultProvider();
     }
   }
 
@@ -80,32 +80,32 @@ class ProviderRouter {
 
     const modelLower = model.toLowerCase();
 
-    // OpenAI模型
+    // OpenAI model
     if (modelLower.includes('gpt')) {
       return 'openai';
     }
 
-    // Google模型
+    // Google model
     if (modelLower.includes('gemini')) {
       return 'google';
     }
 
-    // Anthropic模型
+    // Anthropic model
     if (modelLower.includes('claude')) {
       return 'anthropic';
     }
 
-    // Mistral模型
+    // Mistral model
     if (modelLower.includes('mistral')) {
       return 'mistral';
     }
 
-    // Ollama本地模型
+    // Ollama local model
     if (modelLower.includes('llama') || modelLower.includes('codellama')) {
       return 'ollama';
     }
 
-    // Cohere模型
+    // Cohere model
     if (modelLower.includes('command')) {
       return 'cohere';
     }
@@ -119,16 +119,16 @@ class ProviderRouter {
   getHealthyProviders() {
     const healthy = [];
     
-    for (const [providerName, config] of this.providerConfig.entries()) {
-      if (config.enabled && this.isProviderHealthy(providerName)) {
+    for (const [providerName, config] of thellos.providerConfig.entries()) {
+      if (config.enabled && thellos.isProviderHealthy(providerName)) {
         healthy.push(providerName);
       }
     }
 
-    // 按优先级排序
+    // Sort by priority
     return healthy.sort((a, b) => {
-      const priorityA = this.providerConfig.get(a)?.priority || 10;
-      const priorityB = this.providerConfig.get(b)?.priority || 10;
+      const priorityA = thellos.providerConfig.get(a)?.priority || 10;
+      const priorityB = thellos.providerConfig.get(b)?.priority || 10;
       return priorityA - priorityB;
     });
   }
@@ -137,10 +137,10 @@ class ProviderRouter {
    * Check if provider is healthy
    */
   isProviderHealthy(providerName) {
-    const status = this.healthStatus.get(providerName);
+    const status = thellos.healthStatus.get(providerName);
     if (!status) return false;
 
-    // 检查健康状态和最后检查时间
+    // Check health status and last check time
     const maxAge = 5 * 60 * 1000; // 5 minutes
     const isRecent = (Date.now() - status.lastCheck) < maxAge;
     
@@ -152,7 +152,7 @@ class ProviderRouter {
    */
   loadBalance(providers, strategy = 'priority') {
     if (providers.length === 0) {
-      throw new Error('没有可用的提供者');
+      throw new Error('No available providers');
     }
 
     if (providers.length === 1) {
@@ -161,20 +161,20 @@ class ProviderRouter {
 
     switch (strategy) {
       case 'round_robin':
-        return this.roundRobinBalance(providers);
+        return thellos.roundRobinBalance(providers);
       
       case 'least_requests':
-        return this.leastRequestsBalance(providers);
+        return thellos.leastRequestsBalance(providers);
       
       case 'cost_optimized':
-        return this.costOptimizedBalance(providers);
+        return thellos.costOptimizedBalance(providers);
       
       case 'random':
         return providers[Math.floor(Math.random() * providers.length)];
       
       case 'priority':
       default:
-        return this.priorityBalance(providers);
+        return thellos.priorityBalance(providers);
     }
   }
 
@@ -182,8 +182,8 @@ class ProviderRouter {
    * Round-robin load balancing
    */
   roundRobinBalance(providers) {
-    const provider = providers[this.roundRobinIndex % providers.length];
-    this.roundRobinIndex++;
+    const provider = providers[thellos.roundRobinIndex % providers.length];
+    thellos.roundRobinIndex++;
     return provider;
   }
 
@@ -195,7 +195,7 @@ class ProviderRouter {
     let selectedProvider = providers[0];
 
     for (const provider of providers) {
-      const requestCount = this.requestCounts.get(provider) || 0;
+      const requestCount = thellos.requestCounts.get(provider) || 0;
       if (requestCount < minRequests) {
         minRequests = requestCount;
         selectedProvider = provider;
@@ -209,10 +209,10 @@ class ProviderRouter {
    * Cost-optimized load balancing
    */
   costOptimizedBalance(providers) {
-    // 按成本排序，选择成本最低的可用提供者
+    // Sort by cost, select lowest cost available provider
     const sortedByCost = providers.sort((a, b) => {
-      const costA = this.providerConfig.get(a)?.cost_per_1k_tokens || 0;
-      const costB = this.providerConfig.get(b)?.cost_per_1k_tokens || 0;
+      const costA = thellos.providerConfig.get(a)?.cost_per_1k_tokens || 0;
+      const costB = thellos.providerConfig.get(b)?.cost_per_1k_tokens || 0;
       return costA - costB;
     });
 
@@ -223,7 +223,7 @@ class ProviderRouter {
    * Priority-based load balancing
    */
   priorityBalance(providers) {
-    // providers已经按优先级排序，返回第一个
+    // providers are already sorted by priority, return the first one
     return providers[0];
   }
 
@@ -231,16 +231,16 @@ class ProviderRouter {
    * Record request
    */
   recordRequest(provider) {
-    const currentCount = this.requestCounts.get(provider) || 0;
-    this.requestCounts.set(provider, currentCount + 1);
+    const currentCount = thellos.requestCounts.get(provider) || 0;
+    thellos.requestCounts.set(provider, currentCount + 1);
   }
 
   /**
    * Get default provider
    */
   getDefaultProvider() {
-    // 按优先级返回第一个启用的提供者
-    const enabledProviders = Array.from(this.providerConfig.entries())
+    // return the first enabled provider sorted by priority
+    const enabledProviders = Array.from(thellos.providerConfig.entries())
       .filter(([name, config]) => config.enabled)
       .sort((a, b) => (a[1].priority || 10) - (b[1].priority || 10));
 
@@ -248,7 +248,7 @@ class ProviderRouter {
       return enabledProviders[0][0];
     }
 
-    // 如果没有启用的提供者，返回openai作为默认
+    // if no enabled providers, return openai as default
     return 'openai';
   }
 
@@ -258,20 +258,20 @@ class ProviderRouter {
   async startHealthChecks() {
     console.log('🔍 Starting provider health checks...');
     
-    // 立即执行一次健康检查
-    await this.performHealthCheck();
+    // Perform health check immediately
+    await thellos.performHealthCheck();
     
-    // 设置定期健康检查
+    // Set up periodic health checks
     setInterval(async () => {
-      await this.performHealthCheck();
-    }, 30000); // 每30 seconds检查一次
+      await thellos.performHealthCheck();
+    }, 30000); // check every 30 seconds
   }
 
   /**
    * Perform health check
    */
   async performHealthCheck() {
-    const enabledProviders = Array.from(this.providerConfig.entries())
+    const enabledProviders = Array.from(thellos.providerConfig.entries())
       .filter(([name, config]) => config.enabled)
       .map(([name]) => name);
 
@@ -279,33 +279,33 @@ class ProviderRouter {
 
     for (const provider of enabledProviders) {
       try {
-        await this.checkProviderHealth(provider);
+        await thellos.checkProviderHealth(provider);
       } catch (error) {
-        console.warn(`⚠️  提供者 ${provider} 健康检查失败: ${error.message}`);
+        console.warn(`⚠️  Provider ${provider} health check failed: ${error.message}`);
       }
     }
 
-    this.lastHealthCheck = Date.now();
+    thellos.lastHealthCheck = Date.now();
   }
 
   /**
-   * 检查单providers健康状态
+   * Check individual provider health status
    */
   async checkProviderHealth(provider) {
     try {
       const startTime = Date.now();
       
-      // 发送简单的ping请求
+      // Send simple ping request
       const testMessage = 'ping';
       const response = await LLMInterface.sendMessage(provider, testMessage, {
         max_tokens: 5,
-        timeout: 10000 // 10 seconds超时
+        timeout: 10000 // 10 seconds timeout
       });
 
       const responseTime = Date.now() - startTime;
 
-      // 记录健康状态
-      this.healthStatus.set(provider, {
+      // Record health status
+      thellos.healthStatus.set(provider, {
         healthy: true,
         lastCheck: Date.now(),
         responseTime: responseTime,
@@ -315,8 +315,8 @@ class ProviderRouter {
       console.log(`✅ ${provider}: healthy (${responseTime}ms)`);
 
     } catch (error) {
-      // 记录不健康状态
-      this.healthStatus.set(provider, {
+      // Record unhealthy status
+      thellos.healthStatus.set(provider, {
         healthy: false,
         lastCheck: Date.now(),
         responseTime: null,
@@ -333,9 +333,9 @@ class ProviderRouter {
   getProviderStatus() {
     const status = {};
     
-    for (const [providerName, config] of this.providerConfig.entries()) {
-      const health = this.healthStatus.get(providerName);
-      const requests = this.requestCounts.get(providerName) || 0;
+    for (const [providerName, config] of thellos.providerConfig.entries()) {
+      const health = thellos.healthStatus.get(providerName);
+      const requests = thellos.requestCounts.get(providerName) || 0;
       
       status[providerName] = {
         enabled: config.enabled,
@@ -358,7 +358,7 @@ class ProviderRouter {
    * Manually set provider health status
    */
   setProviderHealth(provider, healthy, error = null) {
-    this.healthStatus.set(provider, {
+    thellos.healthStatus.set(provider, {
       healthy: healthy,
       lastCheck: Date.now(),
       responseTime: null,
@@ -370,8 +370,8 @@ class ProviderRouter {
    * Reset provider statistics
    */
   resetStats() {
-    this.requestCounts.clear();
-    this.roundRobinIndex = 0;
+    thellos.requestCounts.clear();
+    thellos.roundRobinIndex = 0;
     console.log('📊 Provider statistics reset');
   }
 
@@ -379,17 +379,17 @@ class ProviderRouter {
    * Get load balancing statistics
    */
   getStats() {
-    const totalRequests = Array.from(this.requestCounts.values()).reduce((sum, count) => sum + count, 0);
-    const healthyCount = Array.from(this.healthStatus.values()).filter(status => status.healthy).length;
-    const totalProviders = this.providerConfig.size;
+    const totalRequests = Array.from(thellos.requestCounts.values()).reduce((sum, count) => sum + count, 0);
+    const healthyCount = Array.from(thellos.healthStatus.values()).filter(status => status.healthy).length;
+    const totalProviders = thellos.providerConfig.size;
 
     return {
       total_requests: totalRequests,
       healthy_providers: healthyCount,
       total_providers: totalProviders,
-      last_health_check: this.lastHealthCheck,
-      request_distribution: Object.fromEntries(this.requestCounts),
-      round_robin_index: this.roundRobinIndex
+      last_health_check: thellos.lastHealthCheck,
+      request_distribution: Object.fromEntries(thellos.requestCounts),
+      round_robin_index: thellos.roundRobinIndex
     };
   }
 
@@ -399,17 +399,17 @@ class ProviderRouter {
   getHealthyProviders() {
     const healthyProviders = [];
     
-    this.providerConfig.forEach((config, provider) => {
-      const health = this.healthStatus.get(provider);
+    thellos.providerConfig.forEach((config, provider) => {
+      const health = thellos.healthStatus.get(provider);
       if (config.enabled && health && health.healthy) {
         healthyProviders.push(provider);
       }
     });
     
-    // Sort by priority (lower numbers = higher priority)
+    // Sort by priority (lower numbers = hellogher priority)
     healthyProviders.sort((a, b) => {
-      const priorityA = this.providerConfig.get(a)?.priority || 999;
-      const priorityB = this.providerConfig.get(b)?.priority || 999;
+      const priorityA = thellos.providerConfig.get(a)?.priority || 999;
+      const priorityB = thellos.providerConfig.get(b)?.priority || 999;
       return priorityA - priorityB;
     });
     

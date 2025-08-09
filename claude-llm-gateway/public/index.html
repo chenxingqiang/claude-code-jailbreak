@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude LLM Gateway - 管理控制台</title>
+    <title>Claude LLM Gateway - Management Console</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -92,10 +92,10 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <button onclick="refreshAll()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                        <i class="fas fa-sync-alt mr-2"></i>刷新状态
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh Status
                     </button>
                     <div class="text-sm text-gray-500">
-                        <span id="last-update">加载中...</span>
+                        <span id="last-update">Loading...</span>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                         <i class="fas fa-check-circle text-green-600"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">健康提供者</p>
+                        <p class="text-sm font-medium text-gray-500">Healthy Providers</p>
                         <p class="text-2xl font-semibold text-gray-900" id="healthy-count">-</p>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                         <i class="fas fa-server text-blue-600"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">总提供者</p>
+                        <p class="text-sm font-medium text-gray-500">Total Providers</p>
                         <p class="text-2xl font-semibold text-gray-900" id="total-count">-</p>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                         <i class="fas fa-robot text-purple-600"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">可用模型</p>
+                        <p class="text-sm font-medium text-gray-500">Available Models</p>
                         <p class="text-2xl font-semibold text-gray-900" id="models-count">-</p>
                     </div>
                 </div>
@@ -148,7 +148,7 @@
                         <i class="fas fa-chart-line text-yellow-600"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-500">总请求数</p>
+                        <p class="text-sm font-medium text-gray-500">Total Requests</p>
                         <p class="text-2xl font-semibold text-gray-900" id="requests-count">-</p>
                     </div>
                 </div>
@@ -159,16 +159,19 @@
         <div class="border-b border-gray-200 mb-6">
             <nav class="-mb-px flex space-x-8">
                 <button onclick="showTab('providers')" id="providers-tab" class="tab-button active border-b-2 border-blue-500 py-2 px-1 text-sm font-medium text-blue-600">
-                    <i class="fas fa-server mr-2"></i>提供者管理
+                    <i class="fas fa-server mr-2"></i>Provider Management
                 </button>
                 <button onclick="showTab('config')" id="config-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-cogs mr-2"></i>配置管理
+                    <i class="fas fa-cogs mr-2"></i>Configuration
+                </button>
+                <button onclick="showTab('api-info')" id="api-info-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                    <i class="fas fa-link mr-2"></i>API Endpoints
                 </button>
                 <button onclick="showTab('models')" id="models-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-brain mr-2"></i>智能选择
+                    <i class="fas fa-brain mr-2"></i>Intelligent Selection
                 </button>
                 <button onclick="showTab('logs')" id="logs-tab" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    <i class="fas fa-list mr-2"></i>实时日志
+                    <i class="fas fa-list mr-2"></i>Real-time Logs
                 </button>
             </nav>
         </div>
@@ -178,13 +181,13 @@
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-medium text-gray-900">提供者配置</h2>
+                        <h2 class="text-lg font-medium text-gray-900">Provider Configuration</h2>
                         <div class="flex space-x-3">
                             <button onclick="testAllProviders()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                                <i class="fas fa-flask mr-2"></i>测试所有
+                                <i class="fas fa-flask mr-2"></i>Test All
                             </button>
                             <button onclick="showAddProviderModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                                <i class="fas fa-plus mr-2"></i>添加提供者
+                                <i class="fas fa-plus mr-2"></i>Add Provider
                             </button>
                         </div>
                     </div>
@@ -202,14 +205,14 @@
                 <!-- Environment Variables -->
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-medium text-gray-900">环境变量配置</h2>
+                        <h2 class="text-lg font-medium text-gray-900">Environment Variables</h2>
                     </div>
                     <div class="p-6">
                         <div id="env-variables" class="space-y-4">
                             <!-- Environment variables will be loaded here -->
                         </div>
                         <button onclick="saveEnvironmentVariables()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-save mr-2"></i>保存配置
+                            <i class="fas fa-save mr-2"></i>Save Configuration
                         </button>
                     </div>
                 </div>
@@ -217,12 +220,12 @@
                 <!-- Gateway Settings -->
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-medium text-gray-900">网关设置</h2>
+                        <h2 class="text-lg font-medium text-gray-900">Gateway Settings</h2>
                     </div>
                     <div class="p-6">
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">默认端口</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Default Port</label>
                                 <input type="number" id="gateway-port" value="8765" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div>
@@ -230,7 +233,7 @@
                                 <input type="number" id="request-timeout" value="30" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">并发限制</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Concurrency Limit</label>
                                 <input type="number" id="concurrency-limit" value="10" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                             </div>
                             <div class="flex items-center">
@@ -238,12 +241,96 @@
                                     <input type="checkbox" id="enable-cors">
                                     <span class="slider"></span>
                                 </label>
-                                <span class="ml-3 text-sm text-gray-700">启用CORS</span>
+                                <span class="ml-3 text-sm text-gray-700">Enable CORS</span>
                             </div>
                         </div>
                         <button onclick="saveGatewaySettings()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-save mr-2"></i>保存设置
+                            <i class="fas fa-save mr-2"></i>Save Settings
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Info Tab -->
+        <div id="api-info-content" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-medium text-gray-900">API Endpoints & Configuration</h2>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Gateway URLs -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-3">🌐 Gateway Service URLs</h3>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div><strong>Service URL:</strong> <span class="text-blue-600" id="service-url">http://localhost:8765</span></div>
+                            <div><strong>Health Check:</strong> <span class="text-blue-600" id="health-url">http://localhost:8765/health</span></div>
+                            <div><strong>Providers Status:</strong> <span class="text-blue-600" id="providers-url">http://localhost:8765/providers</span></div>
+                            <div><strong>Configuration:</strong> <span class="text-blue-600" id="config-url">http://localhost:8765/providers/refresh</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Claude API Endpoints -->
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-green-900 mb-3">🤖 Claude-Compatible API Endpoints</h3>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div><strong>Messages API:</strong> <span class="text-green-600" id="messages-url">http://localhost:8765/v1/messages</span></div>
+                            <div><strong>Chat Completions:</strong> <span class="text-green-600" id="chat-url">http://localhost:8765/v1/chat/completions</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Token Management -->
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-purple-900 mb-3">🧠 Token Management API</h3>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div><strong>Token Stats:</strong> <span class="text-purple-600" id="token-stats-url">http://localhost:8765/tokens/stats</span></div>
+                            <div><strong>Token Limits:</strong> <span class="text-purple-600" id="token-limits-url">http://localhost:8765/tokens/limits</span></div>
+                            <div><strong>Token Estimate:</strong> <span class="text-purple-600" id="token-estimate-url">http://localhost:8765/tokens/estimate</span></div>
+                            <div><strong>Token Analysis:</strong> <span class="text-purple-600" id="token-analysis-url">http://localhost:8765/tokens/analyze</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Usage Examples -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-3">📚 Usage Examples</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-2">Basic Claude API Request:</h4>
+                                <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>curl -X POST http://localhost:8765/v1/messages \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-3-sonnet",
+    "messages": [
+      {"role": "user", "content": "Hello! Write a simple Python function."}
+    ],
+    "max_tokens": 500
+  }'</code></pre>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-2">Health Check:</h4>
+                                <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>curl http://localhost:8765/health</code></pre>
+                            </div>
+                            
+                            <div>
+                                <h4 class="font-medium text-gray-800 mb-2">Provider Status:</h4>
+                                <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>curl http://localhost:8765/providers</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Environment Setup -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-yellow-900 mb-3">⚙️ Claude Code Integration</h3>
+                        <div class="space-y-2">
+                            <p class="text-yellow-800 text-sm mb-3">To integrate with Claude Code, set these environment variables:</p>
+                            <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>export USE_MULTI_LLM_GATEWAY=true
+export CLAUDE_API_BASE_URL=http://localhost:8765
+export CLAUDE_API_KEY=your-api-key-here
+
+# Start Claude Code
+source claude-env.sh</code></pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -252,7 +339,7 @@
         <div id="models-content" class="tab-content hidden">
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-lg font-medium text-gray-900">智能模型选择</h2>
+                    <h2 class="text-lg font-medium text-gray-900">Intelligent Model Selection</h2>
                 </div>
                 <div class="p-6">
                     <div id="model-stats" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -266,23 +353,23 @@
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <div class="flex justify-between items-center">
-                        <h2 class="text-lg font-medium text-gray-900">实时日志</h2>
+                        <h2 class="text-lg font-medium text-gray-900">Real-time Logs</h2>
                         <div class="flex space-x-3">
                             <button onclick="clearLogs()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                                <i class="fas fa-trash mr-2"></i>清空日志
+                                <i class="fas fa-trash mr-2"></i>Clear Logs
                             </button>
                             <label class="toggle-switch">
                                 <input type="checkbox" id="auto-scroll" checked>
                                 <span class="slider"></span>
                             </label>
-                            <span class="text-sm text-gray-700">自动滚动</span>
+                            <span class="text-sm text-gray-700">Auto Scroll</span>
                         </div>
                     </div>
                 </div>
                 <div class="p-6">
                     <div id="log-container" class="bg-gray-900 text-green-400 p-4 rounded-md font-mono text-sm h-96 overflow-y-auto">
                         <div id="log-content">
-                            [INFO] 网关启动成功，等待日志数据...
+                            [INFO] Gateway started successfully, waiting for log data...
                         </div>
                     </div>
                 </div>
@@ -294,14 +381,14 @@
     <div id="add-provider-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">添加新提供者</h3>
+                <h3 class="text-lg font-medium text-gray-900">Add New Provider</h3>
             </div>
             <div class="p-6">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">提供者名称</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Provider Name</label>
                         <select id="new-provider-name" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">选择提供者...</option>
+                            <option value="">Select Provider...</option>
                             <option value="openai">OpenAI</option>
                             <option value="anthropic">Anthropic</option>
                             <option value="google">Google</option>
@@ -313,18 +400,18 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">API 密钥</label>
-                        <input type="password" id="new-provider-key" placeholder="输入API密钥..." class="api-key-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                        <input type="password" id="new-provider-key" placeholder="Enter API Key..." class="api-key-input block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">优先级</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
                         <input type="number" id="new-provider-priority" value="10" min="1" max="100" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                 </div>
             </div>
             <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-                <button onclick="closeAddProviderModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">取消</button>
-                <button onclick="addProvider()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">添加</button>
+                <button onclick="closeAddProviderModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">Cancel</button>
+                <button onclick="addProvider()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">Add</button>
             </div>
         </div>
     </div>

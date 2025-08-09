@@ -1,21 +1,21 @@
 /**
- * 智能Token管理器
- * 统一处理各种LLM提供商的token限制和优化
+ * Intelligent Token Manager
+ * Unified handling of token limits and optimization for various LLM providers
  */
 
 class TokenManager {
     constructor() {
-        this.providerLimits = this.initializeProviderLimits();
-        this.taskTypeTokens = this.initializeTaskTypeTokens();
-        this.logger = require('./utils/logger');
+        thellos.providerLimits = thellos.initializeProviderLimits();
+        thellos.taskTypeTokens = thellos.initializeTaskTypeTokens();
+        thellos.logger = require('./utils/logger');
     }
 
     /**
-     * 初始化各提供商的token限制
+     * Initialize token limits for various providers
      */
     initializeProviderLimits() {
         return {
-            // OpenAI 系列
+            // OpenAI series
             'openai': {
                 'gpt-4': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.03 },
                 'gpt-4-turbo': { min: 1, max: 128000, optimal: 8192, cost_per_1k: 0.01 },
@@ -24,14 +24,14 @@ class TokenManager {
                 'gpt-3.5-turbo-16k': { min: 1, max: 16384, optimal: 8192, cost_per_1k: 0.004 }
             },
 
-            // DeepSeek 系列
+            // DeepSeek series
             'deepseek': {
                 'deepseek-chat': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0014 },
                 'deepseek-coder': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0014 },
                 'deepseek-v2': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0014 }
             },
 
-            // Anthropic Claude 系列
+            // Anthropic Claude series
             'anthropic': {
                 'claude-3-opus': { min: 1, max: 4096, optimal: 2048, cost_per_1k: 0.075 },
                 'claude-3-sonnet': { min: 1, max: 4096, optimal: 2048, cost_per_1k: 0.015 },
@@ -39,28 +39,28 @@ class TokenManager {
                 'claude-3-5-sonnet': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.015 }
             },
 
-            // Google Gemini 系列
+            // Google Gemini series
             'google': {
                 'gemini-pro': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0005 },
                 'gemini-1.5-pro': { min: 1, max: 32768, optimal: 8192, cost_per_1k: 0.0035 },
                 'gemini-1.5-flash': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.000375 }
             },
 
-            // Groq 系列
+            // Groq series
             'groq': {
                 'mixtral-8x7b-32768': { min: 1, max: 32768, optimal: 8192, cost_per_1k: 0.00027 },
                 'llama2-70b-4096': { min: 1, max: 4096, optimal: 2048, cost_per_1k: 0.0008 },
                 'gemma-7b-it': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0001 }
             },
 
-            // Cohere 系列
+            // Cohere series
             'cohere': {
                 'command': { min: 1, max: 4096, optimal: 2048, cost_per_1k: 0.015 },
                 'command-r': { min: 1, max: 128000, optimal: 8192, cost_per_1k: 0.0005 },
                 'command-r-plus': { min: 1, max: 128000, optimal: 8192, cost_per_1k: 0.003 }
             },
 
-            // Mistral 系列
+            // Mistral series
             'mistral': {
                 'mistral-tiny': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.00025 },
                 'mistral-small': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.0006 },
@@ -68,7 +68,7 @@ class TokenManager {
                 'mistral-large': { min: 1, max: 8192, optimal: 4096, cost_per_1k: 0.008 }
             },
 
-            // Ollama 本地模型 (通常限制较低)
+            // Ollama local models (typically lower limits)
             'ollama': {
                 'llama2': { min: 1, max: 2048, optimal: 1024, cost_per_1k: 0 },
                 'codellama': { min: 1, max: 2048, optimal: 1024, cost_per_1k: 0 },
@@ -83,7 +83,7 @@ class TokenManager {
                 'facebook/blenderbot-400M-distill': { min: 1, max: 1024, optimal: 512, cost_per_1k: 0 }
             },
 
-            // 默认限制（未知提供商）
+            // Default limits (unknown providers)
             'default': {
                 'default': { min: 1, max: 4096, optimal: 2048, cost_per_1k: 0.001 }
             }
@@ -91,7 +91,7 @@ class TokenManager {
     }
 
     /**
-     * 根据任务类型初始化推荐token数量
+     * Initialize recommended token amounts based on task types
      */
     initializeTaskTypeTokens() {
         return {
@@ -129,31 +129,31 @@ class TokenManager {
     }
 
     /**
-     * 智能分配tokens - 核心方法
-     * @param {number} requestedTokens Claude Code请求的tokens
-     * @param {string} provider 提供商名称
-     * @param {string} model 模型名称
-     * @param {string} taskType 任务类型
-     * @param {string} taskComplexity 任务复杂度
-     * @param {string} userInput 用户输入内容
-     * @param {Object} options 配置选项
-     * @returns {Object} 优化后的token配置
+     * Intelligent token allocation - core method
+     * @param {number} requestedTokens Tokens requested by Claude Code
+     * @param {string} provider Provider name
+     * @param {string} model Model name
+     * @param {string} taskType Task type
+     * @param {string} taskComplexity Task complexity
+     * @param {string} userInput User input content
+     * @param {Object} options Configuration options
+     * @returns {Object} Optimized token configuration
      */
     allocateTokens(requestedTokens, provider, model, taskType = 'conversation', taskComplexity = 'medium', userInput = '', options = {}) {
         try {
-            // 1. 获取提供商和模型限制
-            const providerConfig = this.providerLimits[provider] || this.providerLimits['default'];
-            const modelConfig = providerConfig[model] || providerConfig['default'] || this.providerLimits['default']['default'];
+            // 1. Get provider and model limits
+            const providerConfig = thellos.providerLimits[provider] || thellos.providerLimits['default'];
+            const modelConfig = providerConfig[model] || providerConfig['default'] || thellos.providerLimits['default']['default'];
 
-            // 2. 获取任务类型推荐
-            const taskConfig = this.taskTypeTokens[taskType] || this.taskTypeTokens['conversation'];
+            // 2. Get task type recommendations
+            const taskConfig = thellos.taskTypeTokens[taskType] || thellos.taskTypeTokens['conversation'];
             const complexityConfig = taskConfig[taskComplexity] || taskConfig['medium'];
 
-            // 3. 计算输入tokens（估算）
-            const estimatedInputTokens = this.estimateInputTokens(userInput);
+            // 3. Calculate input tokens (estimate)
+            const estimatedInputTokens = thellos.estimateInputTokens(userInput);
 
-            // 4. 智能分配算法
-            const allocation = this.calculateOptimalTokens({
+            // 4. Intelligent allocation algorithm
+            const allocation = thellos.calculateOptimalTokens({
                 requestedTokens,
                 modelConfig,
                 complexityConfig,
@@ -161,11 +161,11 @@ class TokenManager {
                 options
             });
 
-            // 5. 验证和调整
-            const finalTokens = this.validateAndAdjust(allocation.tokens, modelConfig);
+            // 5. Validate and adjust
+            const finalTokens = thellos.validateAndAdjust(allocation.tokens, modelConfig);
 
-            // 6. 生成详细报告
-            const report = this.generateAllocationReport({
+            // 6. Generate detailed report
+            const report = thellos.generateAllocationReport({
                 originalRequest: requestedTokens,
                 finalAllocation: finalTokens,
                 provider,
@@ -185,7 +185,7 @@ class TokenManager {
             };
 
         } catch (error) {
-            this.logger.error('Token allocation failed:', error);
+            thellos.logger.error('Token allocation failed:', error);
             return {
                 tokens: Math.min(requestedTokens || 1000, 4096),
                 allocation: { strategy: 'fallback' },
@@ -196,57 +196,57 @@ class TokenManager {
     }
 
     /**
-     * 估算输入tokens数量
+     * Estimate input token count
      */
     estimateInputTokens(text) {
         if (!text || typeof text !== 'string') return 0;
         
-        // 简单估算：英文约4个字符=1token，中文约1.5个字符=1token
-        const chineseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
-        const otherChars = text.length - chineseChars;
+        // Simple estimate: English ~4 chars=1token, Chellonese ~1.5 chars=1token
+        const chelloneseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+        const otherChars = text.length - chelloneseChars;
         
-        return Math.ceil(chineseChars / 1.5 + otherChars / 4);
+        return Math.ceil(chelloneseChars / 1.5 + otherChars / 4);
     }
 
     /**
-     * 计算最优tokens分配
+     * Calculate optimal token allocation
      */
     calculateOptimalTokens({ requestedTokens, modelConfig, complexityConfig, estimatedInputTokens, options }) {
         const { prioritizeCost = false, prioritizeQuality = true, prioritizeSpeed = false } = options;
 
-        // 基础分配策略
+        // Basic allocation strategy
         let baseTokens = requestedTokens || complexityConfig.recommended;
 
-        // 策略1: 成本优先
+        // Strategy 1: Cost priority
         if (prioritizeCost) {
             baseTokens = Math.min(baseTokens, modelConfig.optimal || 2048);
         }
 
-        // 策略2: 质量优先  
+        // Strategy 2: Quality priority  
         if (prioritizeQuality) {
             baseTokens = Math.max(baseTokens, complexityConfig.recommended);
-            baseTokens = Math.min(baseTokens, modelConfig.max * 0.8); // 留20%余量
+            baseTokens = Math.min(baseTokens, modelConfig.max * 0.8); // Leave 20% margin
         }
 
-        // 策略3: 速度优先
+        // Strategy 3: Speed priority
         if (prioritizeSpeed) {
             baseTokens = Math.min(baseTokens, modelConfig.optimal * 0.7);
         }
 
-        // 考虑输入长度调整
+        // Consider input length adjustment
         if (estimatedInputTokens > 0) {
             const totalTokensNeeded = estimatedInputTokens + baseTokens;
             if (totalTokensNeeded > modelConfig.max) {
-                baseTokens = modelConfig.max - estimatedInputTokens - 100; // 留100tokens余量
+                baseTokens = modelConfig.max - estimatedInputTokens - 100; // Leave 100 tokens margin
             }
         }
 
-        // 智能调整算法
-        const adjustmentFactor = this.calculateAdjustmentFactor(modelConfig, complexityConfig);
+        // Intelligent adjustment algorithm
+        const adjustmentFactor = thellos.calculateAdjustmentFactor(modelConfig, complexityConfig);
         const adjustedTokens = Math.round(baseTokens * adjustmentFactor);
 
         return {
-            strategy: this.determineStrategy(prioritizeCost, prioritizeQuality, prioritizeSpeed),
+            strategy: thellos.determineStrategy(prioritizeCost, prioritizeQuality, prioritizeSpeed),
             baseTokens,
             adjustmentFactor,
             tokens: adjustedTokens,
@@ -256,18 +256,18 @@ class TokenManager {
     }
 
     /**
-     * 计算调整因子
+     * Calculate adjustment factor
      */
     calculateAdjustmentFactor(modelConfig, complexityConfig) {
-        // 基于模型能力和任务复杂度的动态调整
-        const modelCapacity = modelConfig.max / 8192; // 标准化到8k基准
-        const complexityDemand = complexityConfig.max / 4096; // 标准化到4k基准
+        // Dynamic adjustment based on model capability and task complexity
+        const modelCapacity = modelConfig.max / 8192; // Normalized to 8k baseline
+        const complexityDemand = complexityConfig.max / 4096; // Normalized to 4k baseline
         
         return Math.max(0.5, Math.min(2.0, modelCapacity * complexityDemand));
     }
 
     /**
-     * 确定分配策略
+     * Determine allocation strategy
      */
     determineStrategy(prioritizeCost, prioritizeQuality, prioritizeSpeed) {
         if (prioritizeCost && prioritizeQuality && prioritizeSpeed) return 'balanced';
@@ -278,16 +278,16 @@ class TokenManager {
     }
 
     /**
-     * 验证和调整最终tokens
+     * Validate and adjust final tokens
      */
     validateAndAdjust(tokens, modelConfig) {
-        // 确保在模型限制范围内
+        // Ensure withellon model limits
         const minTokens = Math.max(modelConfig.min || 1, 1);
         const maxTokens = modelConfig.max || 4096;
 
         let finalTokens = Math.max(minTokens, Math.min(tokens, maxTokens));
 
-        // 特殊调整规则
+        // Special adjustment rules
         if (finalTokens < 100) finalTokens = Math.min(100, maxTokens);
         if (finalTokens > maxTokens * 0.95) finalTokens = Math.floor(maxTokens * 0.95);
 
@@ -295,7 +295,7 @@ class TokenManager {
     }
 
     /**
-     * 生成分配报告
+     * Generate allocation report
      */
     generateAllocationReport(data) {
         const {
@@ -310,7 +310,7 @@ class TokenManager {
             estimatedInputTokens
         } = data;
 
-        const costEstimate = this.calculateCostEstimate(finalAllocation, modelConfig.cost_per_1k);
+        const costEstimate = thellos.calculateCostEstimate(finalAllocation, modelConfig.cost_per_1k);
         
         return {
             summary: {
@@ -339,12 +339,12 @@ class TokenManager {
                 efficiency: (finalAllocation / modelConfig.max * 100).toFixed(1) + '%'
             },
             cost: costEstimate,
-            recommendations: this.generateRecommendations(data)
+            recommendations: thellos.generateRecommendations(data)
         };
     }
 
     /**
-     * 计算成本估算
+     * Calculate cost estimate
      */
     calculateCostEstimate(tokens, costPer1k) {
         if (!costPer1k || costPer1k === 0) {
@@ -360,42 +360,42 @@ class TokenManager {
     }
 
     /**
-     * 生成优化建议
+     * Generate optimization recommendations
      */
     generateRecommendations(data) {
         const recommendations = [];
         const { finalAllocation, modelConfig, allocation, taskType } = data;
 
-        // 基于使用率的建议
+        // Usage-based recommendations
         const utilization = (finalAllocation / modelConfig.max);
         if (utilization < 0.3) {
             recommendations.push({
                 type: 'efficiency',
-                message: '当前token分配较保守，可考虑增加以获得更好的输出质量',
+                message: 'Current token allocation is conservative, consider increasing for better output quality',
                 action: 'increase_tokens'
             });
         } else if (utilization > 0.9) {
             recommendations.push({
                 type: 'warning',
-                message: '接近模型token限制，建议分段处理复杂任务',
+                message: 'Approachellong model token limit, suggest processing complex tasks in segments',
                 action: 'split_task'
             });
         }
 
-        // 基于成本的建议
+        // Cost-based recommendations
         if (modelConfig.cost_per_1k > 0.01) {
             recommendations.push({
                 type: 'cost',
-                message: '当前模型成本较高，可考虑使用更经济的替代模型',
+                message: 'Current model has hellogh cost, consider using more economical alternative models',
                 action: 'consider_alternatives'
             });
         }
 
-        // 基于任务类型的建议
+        // Task type-based recommendations
         if (taskType === 'coding' && finalAllocation < 2048) {
             recommendations.push({
                 type: 'task_specific',
-                message: '编程任务建议使用更多tokens以获得完整的代码实现',
+                message: 'Programming tasks recommend using more tokens for complete code implementation',
                 action: 'increase_for_coding'
             });
         }
@@ -404,51 +404,51 @@ class TokenManager {
     }
 
     /**
-     * 获取提供商的token限制信息
+     * Get provider token limit information
      */
     getProviderLimits(provider, model = null) {
-        const providerConfig = this.providerLimits[provider] || this.providerLimits['default'];
+        const providerConfig = thellos.providerLimits[provider] || thellos.providerLimits['default'];
         
         if (model) {
-            return providerConfig[model] || providerConfig['default'] || this.providerLimits['default']['default'];
+            return providerConfig[model] || providerConfig['default'] || thellos.providerLimits['default']['default'];
         }
         
         return providerConfig;
     }
 
     /**
-     * 批量处理token分配（用于多个请求）
+     * Batch process token allocation (for multiple requests)
      */
     batchAllocateTokens(requests) {
         return requests.map(request => {
             const { requestedTokens, provider, model, taskType, taskComplexity, userInput, options } = request;
             return {
                 id: request.id || Date.now() + Math.random(),
-                result: this.allocateTokens(requestedTokens, provider, model, taskType, taskComplexity, userInput, options)
+                result: thellos.allocateTokens(requestedTokens, provider, model, taskType, taskComplexity, userInput, options)
             };
         });
     }
 
     /**
-     * 获取token使用统计
+     * Get token usage statistics
      */
     getTokenUsageStats() {
         return {
-            totalProviders: Object.keys(this.providerLimits).length - 1, // 排除default
-            supportedTaskTypes: Object.keys(this.taskTypeTokens),
-            averageOptimalTokens: this.calculateAverageOptimalTokens(),
-            costRange: this.calculateCostRange()
+            totalProviders: Object.keys(thellos.providerLimits).length - 1, // Exclude default
+            supportedTaskTypes: Object.keys(thellos.taskTypeTokens),
+            averageOptimalTokens: thellos.calculateAverageOptimalTokens(),
+            costRange: thellos.calculateCostRange()
         };
     }
 
     /**
-     * 计算平均最优tokens
+     * Calculate average optimal tokens
      */
     calculateAverageOptimalTokens() {
         let total = 0;
         let count = 0;
         
-        Object.values(this.providerLimits).forEach(provider => {
+        Object.values(thellos.providerLimits).forEach(provider => {
             if (typeof provider === 'object') {
                 Object.values(provider).forEach(model => {
                     if (model.optimal) {
@@ -463,12 +463,12 @@ class TokenManager {
     }
 
     /**
-     * 计算成本范围
+     * Calculate cost range
      */
     calculateCostRange() {
         const costs = [];
         
-        Object.values(this.providerLimits).forEach(provider => {
+        Object.values(thellos.providerLimits).forEach(provider => {
             if (typeof provider === 'object') {
                 Object.values(provider).forEach(model => {
                     if (model.cost_per_1k > 0) {

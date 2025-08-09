@@ -336,9 +336,37 @@ function showTab(tabName) {
     // Load tab-specific content
     if (tabName === 'config') {
         renderEnvironmentVariables();
+    } else if (tabName === 'api-info') {
+        loadApiInfo();
     } else if (tabName === 'logs') {
         startLogStreaming();
     }
+}
+
+// API Info functions
+function loadApiInfo() {
+    // Update URLs based on current hostname and port
+    const currentHost = window.location.hostname;
+    const currentPort = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+    const baseUrl = `${window.location.protocol}//${currentHost}:${currentPort}`;
+    
+    // Update all URL elements
+    document.getElementById('service-url').textContent = baseUrl;
+    document.getElementById('health-url').textContent = `${baseUrl}/health`;
+    document.getElementById('providers-url').textContent = `${baseUrl}/providers`;
+    document.getElementById('config-url').textContent = `${baseUrl}/providers/refresh`;
+    document.getElementById('messages-url').textContent = `${baseUrl}/v1/messages`;
+    document.getElementById('chat-url').textContent = `${baseUrl}/v1/chat/completions`;
+    document.getElementById('token-stats-url').textContent = `${baseUrl}/tokens/stats`;
+    document.getElementById('token-limits-url').textContent = `${baseUrl}/tokens/limits`;
+    document.getElementById('token-estimate-url').textContent = `${baseUrl}/tokens/estimate`;
+    document.getElementById('token-analysis-url').textContent = `${baseUrl}/tokens/analyze`;
+    
+    // Update code examples
+    const codeBlocks = document.querySelectorAll('pre code');
+    codeBlocks.forEach(block => {
+        block.textContent = block.textContent.replace(/http:\/\/localhost:8765/g, baseUrl);
+    });
 }
 
 // Provider management functions

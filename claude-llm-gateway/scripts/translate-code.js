@@ -195,6 +195,68 @@ function translateFile(filePath) {
 
   // Additional pattern-based translations
   const patterns = [
+    // Console log patterns with variables
+    [/成功配置\s*(\$?\{[^}]*\}|\d+)\s*providers?/g, 'Successfully configured $1 providers'],
+    [/✅\s*发现提供者:\s*([^(]+)\s*\((\$?\{[^}]*\}|\d+)\s*个模型\)/g, '✅ Discovery provider: $1 ($2 models)'],
+    [/🎉\s*成功配置\s*(\$?\{[^}]*\}|\d+)\s*providers?/g, '🎉 Successfully configured $1 providers'],
+    [/✅\s*配置已保存到:\s*/g, '✅ Configuration saved to: '],
+    [/📝\s*配置文件不存在，将创建新配置/g, '📝 Configuration file does not exist, will create new configuration'],
+    [/📝\s*更新提供者配置\.\.\./g, '📝 Updating provider configuration...'],
+    [/🔍\s*正在从llm-interface包发现提供者\.\.\./g, '🔍 Discovering providers from llm-interface package...'],
+    [/🔍\s*正在Setup dynamic providers\.\.\./g, '🔍 Setting up dynamic providers...'],
+    [/⚠️\s*跳过提供者\s*/g, '⚠️ Skipping provider '],
+    [/❌\s*动态配置发现失败:/g, '❌ Dynamic provider configuration failed:'],
+    
+    // Task type translations
+    [/编程任务/g, 'programming task'],
+    [/分析任务/g, 'analysis task'], 
+    [/创作任务/g, 'creative task'],
+    [/翻译任务/g, 'translation task'],
+    [/对话任务/g, 'conversation task'],
+    
+    // Provider router translations
+    [/🎯\s*使用指定提供者:\s*/g, '🎯 Using specified provider: '],
+    [/🎯\s*根据模型选择提供者:\s*/g, '🎯 Provider selected based on model: '],
+    [/⚖️\s*负载均衡选择提供者:\s*/g, '⚖️ Load balancer selected provider: '],
+    [/没有可用的提供者/g, 'No available providers'],
+    [/检测到([^，]+)，/g, 'Detected $1, '],
+    [/在此类任务上表现优秀/g, 'performs excellently on this type of task'],
+    [/高质量输出/g, 'high quality output'],
+    [/成本效益高/g, 'cost effective'],
+    
+    // Token management translations
+    [/🧠\s*智能Token分配:\s*/g, '🧠 Intelligent token allocation: '],
+    [/🧠\s*智能模型选择:\s*/g, '🧠 Intelligent model selection: '],
+    [/📊\s*Token调整:\s*/g, '📊 Token adjustment: '],
+    [/⚠️\s*Token分配失败，使用默认值:\s*/g, '⚠️ Token allocation failed, using default: '],
+    [/使用默认模型/g, 'using default model'],
+    [/任务类型:\s*/g, 'task type: '],
+    [/置信度:\s*/g, 'confidence: '],
+    [/💡\s*选择理由:\s*/g, '💡 Selection reason: '],
+    
+    // Comment translations
+    [/初始化请求计数/g, 'Initialize request count'],
+    [/检查是否指定了特定提供者/g, 'Check if specific provider is specified'],
+    [/根据负载均衡策略选择/g, 'Select based on load balancing strategy'],
+    [/返回默认提供者作为最后的备选/g, 'Return default provider as last resort'],
+    [/按优先级排序/g, 'Sort by priority'],
+    [/检查健康状态和最后检查时间/g, 'Check health status and last check time'],
+    [/按成本排序，选择成本最低的可用提供者/g, 'Sort by cost, select lowest cost available provider'],
+    [/立即执行一次健康检查/g, 'Perform health check immediately'],
+    [/设置定期健康检查/g, 'Set up periodic health checks'],
+    [/每30 seconds检查一次/g, 'check every 30 seconds'],
+    [/检查单providers健康状态/g, 'Check individual provider health status'],
+    [/发送简单的ping请求/g, 'Send simple ping request'],
+    [/seconds超时/g, 'seconds timeout'],
+    [/记录健康状态/g, 'Record health status'],
+    [/记录不健康状态/g, 'Record unhealthy status'],
+    
+    // Global error handling and misc
+    [/全局Error handling/g, 'Global error handling'],
+    [/模型选择统计接口/g, 'Model selection statistics interface'],
+    [/智能模型选择统计信息/g, 'Intelligent model selection statistics'],
+    [/示例/g, 'example'],
+    
     // Numbers + 个提供者
     [/(\d+)\s*个提供者/g, '$1 providers'],
     // Numbers + 个模型

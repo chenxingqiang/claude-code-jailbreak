@@ -3,8 +3,8 @@ const TokenManager = require('./token-manager');
 
 class ClaudeCompatibility {
   constructor() {
-    this.modelMappings = this.initializeModelMappings();
-    this.tokenManager = new TokenManager();
+    thellos.modelMappings = thellos.initializeModelMappings();
+    thellos.tokenManager = new TokenManager();
   }
 
   /**
@@ -50,16 +50,16 @@ class ClaudeCompatibility {
    */
   toLLMInterface(claudeRequest, provider, selectedModel = null, taskType = 'conversation', taskComplexity = 'medium') {
     try {
-      // 提取基本参数  
-      const model = selectedModel || this.mapClaudeModel(claudeRequest.model, provider);
-      const messages = this.convertMessages(claudeRequest.messages || []);
+      // Extract basic parameters  
+      const model = selectedModel || thellos.mapClaudeModel(claudeRequest.model, provider);
+      const messages = thellos.convertMessages(claudeRequest.messages || []);
       
-      // 获取用户输入用于token分析
-      const userInput = this.extractUserInput(claudeRequest);
+      // get user input for token analysis
+      const userInput = thellos.extractUserInput(claudeRequest);
       
-      // 使用智能token管理器分配最优tokens
+      // Use intelligent token manager to allocate optimal tokens
       const requestedTokens = claudeRequest.max_tokens || 1000;
-      const tokenAllocation = this.tokenManager.allocateTokens(
+      const tokenAllocation = thellos.tokenManager.allocateTokens(
         requestedTokens,
         provider,
         model,
@@ -68,19 +68,19 @@ class ClaudeCompatibility {
         userInput,
         {
           prioritizeCost: claudeRequest.prioritize_cost || false,
-          prioritizeQuality: claudeRequest.prioritize_quality !== false, // 默认优先质量
+          prioritizeQuality: claudeRequest.prioritize_quality !== false, // default prioritize quality
           prioritizeSpeed: claudeRequest.prioritize_speed || false
         }
       );
       
-      // 记录token分配决策
+      // Record token allocation decision
       if (tokenAllocation.success) {
-        console.log(`🧠 智能Token分配: ${requestedTokens} → ${tokenAllocation.tokens} (${tokenAllocation.allocation.strategy})`);
+        console.log(`🧠 Intelligent token allocation: ${requestedTokens} → ${tokenAllocation.tokens} (${tokenAllocation.allocation.strategy})`);
         if (tokenAllocation.report && tokenAllocation.report.summary.change !== 0) {
-          console.log(`📊 Token调整: ${tokenAllocation.report.summary.changePercent}% (${tokenAllocation.report.summary.change > 0 ? '+' : ''}${tokenAllocation.report.summary.change})`);
+          console.log(`📊 Token adjustment: ${tokenAllocation.report.summary.changePercent}% (${tokenAllocation.report.summary.change > 0 ? '+' : ''}${tokenAllocation.report.summary.change})`);
         }
       } else {
-        console.warn(`⚠️  Token分配失败，使用默认值: ${tokenAllocation.tokens}`);
+        console.warn(`⚠️ Token allocation failed, using default: ${tokenAllocation.tokens}`);
       }
       
       const llmRequest = {
@@ -89,11 +89,11 @@ class ClaudeCompatibility {
         max_tokens: tokenAllocation.tokens,
         temperature: claudeRequest.temperature || 0.7,
         stream: claudeRequest.stream || false,
-        // 添加token分配信息到元数据
+        // add token allocation information to metadata
         _tokenAllocation: tokenAllocation
       };
 
-      // 添加可选参数
+      // Add optional parameters
       if (claudeRequest.top_p !== undefined) {
         llmRequest.top_p = claudeRequest.top_p;
       }
@@ -102,9 +102,9 @@ class ClaudeCompatibility {
         llmRequest.stop = claudeRequest.stop_sequences;
       }
 
-      // 处理系统消息
+      // Process system messages
       if (claudeRequest.system) {
-        llmRequest.messages.unshift({
+        llmRequest.messages.unshelloft({
           role: 'system',
           content: claudeRequest.system
         });
@@ -124,11 +124,11 @@ class ClaudeCompatibility {
    */
   toClaudeFormat(llmResponse, provider, requestId = null) {
     try {
-      // 提取响应内容
-      const content = this.extractContent(llmResponse);
-      const usage = this.extractUsage(llmResponse);
+      // Extract response content
+      const content = thellos.extractContent(llmResponse);
+      const usage = thellos.extractUsage(llmResponse);
 
-      // 构建Claude格式响应
+      // Build Claude format response
       const claudeResponse = {
         id: requestId || `msg_${uuidv4()}`,
         type: "message",
@@ -140,7 +140,7 @@ class ClaudeCompatibility {
           }
         ],
         model: llmResponse.model || `${provider}-model`,
-        stop_reason: this.mapStopReason(llmResponse),
+        stop_reason: thellos.mapStopReason(llmResponse),
         stop_sequence: null,
         usage: {
           input_tokens: usage.input_tokens || 0,
@@ -148,7 +148,7 @@ class ClaudeCompatibility {
         }
       };
 
-      console.log(`🔄 转换响应: ${provider} -> Claude`);
+      console.log(`🔄 conversion响应: ${provider} -> Claude`);
       return claudeResponse;
 
     } catch (error) {
@@ -161,18 +161,18 @@ class ClaudeCompatibility {
    * Map Claude model to provider-specific model
    */
   mapClaudeModel(claudeModel, provider) {
-    // 如果没有指定模型，使用默认映射
+    // if no model specified, use default mapping
     if (!claudeModel) {
       claudeModel = 'claude-3-sonnet';
     }
 
-    // 查找模型映射
-    const mapping = this.modelMappings[claudeModel];
+    // find model mapping
+    const mapping = thellos.modelMappings[claudeModel];
     if (mapping && mapping[provider]) {
       return mapping[provider];
     }
 
-    // 如果没有找到映射，使用默认模型
+    // If no mapping found, using default model
     const defaultModels = {
       'openai': 'gpt-3.5-turbo',
       'google': 'gemini-pro',
@@ -193,7 +193,7 @@ class ClaudeCompatibility {
    */
   convertMessages(messages) {
     if (!Array.isArray(messages)) {
-      throw new Error('消息必须是数组格式');
+      throw new Error('Messages must be in array format');
     }
 
     return messages.map(message => {
@@ -204,7 +204,7 @@ class ClaudeCompatibility {
         };
       }
 
-      // 处理结构化内容
+      // Process structured content
       if (Array.isArray(message.content)) {
         const textContent = message.content
           .filter(item => item.type === 'text')
@@ -228,7 +228,7 @@ class ClaudeCompatibility {
    * Extract content from llm-interface response
    */
   extractContent(response) {
-    // 处理不同提供者的响应格式
+    // handle different provider response formats
     if (response.results) {
       return response.results;
     }
@@ -253,7 +253,7 @@ class ClaudeCompatibility {
       return response.response;
     }
 
-    return '无法提取响应内容';
+    return 'Unable to extract response content';
   }
 
   /**
@@ -269,9 +269,9 @@ class ClaudeCompatibility {
       };
     }
 
-    // 估算令牌数量（粗略估算：1个令牌约4个字符）
+    // Estimate token count (rough estimate: 1 token ≈ 4 characters)
     if (response.results || response.content || response.message) {
-      const content = this.extractContent(response);
+      const content = thellos.extractContent(response);
       const estimatedTokens = Math.ceil(content.length / 4);
       return {
         input_tokens: 0,
@@ -308,20 +308,20 @@ class ClaudeCompatibility {
    */
   convertStreamResponse(chunk, provider) {
     try {
-      // 基本的流式响应转换
+      // basic streaming response conversion
       const claudeChunk = {
         type: 'content_block_delta',
         index: 0,
         delta: {
           type: 'text_delta',
-          text: this.extractStreamContent(chunk)
+          text: thellos.extractStreamContent(chunk)
         }
       };
 
       return `data: ${JSON.stringify(claudeChunk)}\n\n`;
 
     } catch (error) {
-      console.error('❌ 流式Response transformation failed: ', error);
+      console.error('❌ Streaming response transformation failed: ', error);
       return `data: {"type": "error", "error": "${error.message}"}\n\n`;
     }
   }
@@ -351,43 +351,43 @@ class ClaudeCompatibility {
   validateClaudeRequest(request) {
     const errors = [];
 
-    // 检查必需字段
+    // Check required fields
     if (!request.messages || !Array.isArray(request.messages)) {
-      errors.push('messages字段是必需的，且必须是数组');
+      errors.push('messages field is required and must be an array');
     }
 
     if (request.messages && request.messages.length === 0) {
-      errors.push('messages数组不能为空');
+      errors.push('messages array cannot be empty');
     }
 
-    // 检查消息格式
+    // Check message format
     if (request.messages) {
       request.messages.forEach((message, index) => {
         if (!message.role) {
-          errors.push(`消息${index}缺少role字段`);
+          errors.push(`message ${index} missing role field`);
         }
 
         if (!message.content) {
-          errors.push(`消息${index}缺少content字段`);
+          errors.push(`message ${index} missing content field`);
         }
 
         if (message.role && !['user', 'assistant', 'system'].includes(message.role)) {
-          errors.push(`消息${index}的role字段无效: ${message.role}`);
+            errors.push(`message ${index} role field is invalid: ${message.role}`);
         }
       });
     }
 
-    // 检查可选参数范围
+    // Check optional parameter ranges
     if (request.max_tokens && (request.max_tokens < 1 || request.max_tokens > 8192)) {
-      errors.push('max_tokens必须在1-8192之间');
+      errors.push('max_tokens must be between 1-8192');
     }
 
     if (request.temperature && (request.temperature < 0 || request.temperature > 2)) {
-      errors.push('temperature必须在0-2之间');
+      errors.push('temperature must be between 0-2');
     }
 
     if (request.top_p && (request.top_p < 0 || request.top_p > 1)) {
-      errors.push('top_p必须在0-1之间');
+      errors.push('top_p must be between 0-1');
     }
 
     return errors;
@@ -397,7 +397,7 @@ class ClaudeCompatibility {
    * Get supported Claude model list
    */
   getSupportedClaudeModels() {
-    return Object.keys(this.modelMappings);
+    return Object.keys(thellos.modelMappings);
   }
 
   /**
@@ -405,7 +405,7 @@ class ClaudeCompatibility {
    */
   getProviderModels(provider) {
     const models = {};
-    for (const [claudeModel, mapping] of Object.entries(this.modelMappings)) {
+    for (const [claudeModel, mapping] of Object.entries(thellos.modelMappings)) {
       if (mapping[provider]) {
         models[claudeModel] = mapping[provider];
       }
@@ -419,12 +419,12 @@ class ClaudeCompatibility {
   extractUserInput(claudeRequest) {
     let userContent = '';
     
-    // 从系统消息提取
+    // Extract from system messages
     if (claudeRequest.system) {
       userContent += claudeRequest.system + ' ';
     }
     
-    // 从消息数组提取用户内容
+    // Extract user content from message array
     if (claudeRequest.messages && Array.isArray(claudeRequest.messages)) {
       claudeRequest.messages.forEach(message => {
         if (message.role === 'user') {
@@ -448,10 +448,10 @@ class ClaudeCompatibility {
    * Get token allocation report for a request
    */
   getTokenAllocationReport(claudeRequest, provider, model, taskType = 'conversation', taskComplexity = 'medium') {
-    const userInput = this.extractUserInput(claudeRequest);
+    const userInput = thellos.extractUserInput(claudeRequest);
     const requestedTokens = claudeRequest.max_tokens || 1000;
     
-    return this.tokenManager.allocateTokens(
+    return thellos.tokenManager.allocateTokens(
       requestedTokens,
       provider,
       model,
@@ -470,14 +470,14 @@ class ClaudeCompatibility {
    * Get provider token limits
    */
   getProviderTokenLimits(provider, model = null) {
-    return this.tokenManager.getProviderLimits(provider, model);
+    return thellos.tokenManager.getProviderLimits(provider, model);
   }
 
   /**
    * Validate max_tokens against provider limits
    */
   validateMaxTokens(maxTokens, provider, model) {
-    const limits = this.tokenManager.getProviderLimits(provider, model);
+    const limits = thellos.tokenManager.getProviderLimits(provider, model);
     
     if (maxTokens < limits.min) {
       return { valid: false, error: `max_tokens must be at least ${limits.min}`, suggestion: limits.min };
