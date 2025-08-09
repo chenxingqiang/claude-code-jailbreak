@@ -19,7 +19,8 @@ class ClaudeCompatibility {
         'cohere': 'command-r-plus',
         'mistral': 'mistral-large',
         'groq': 'llama2-70b-4096',
-        'anthropic': 'claude-3-sonnet'
+        'anthropic': 'claude-3-sonnet',
+        'deepseek': 'deepseek-chat'
       },
       'claude-3-haiku': {
         'openai': 'gpt-3.5-turbo',
@@ -28,7 +29,8 @@ class ClaudeCompatibility {
         'cohere': 'command',
         'mistral': 'mistral-small',
         'groq': 'mixtral-8x7b-32768',
-        'anthropic': 'claude-3-haiku'
+        'anthropic': 'claude-3-haiku',
+        'deepseek': 'deepseek-chat'
       },
       'claude-3-opus': {
         'openai': 'gpt-4-turbo',
@@ -37,7 +39,8 @@ class ClaudeCompatibility {
         'cohere': 'command-r-plus',
         'mistral': 'mistral-large',
         'groq': 'llama2-70b-4096',
-        'anthropic': 'claude-3-opus'
+        'anthropic': 'claude-3-opus',
+        'deepseek': 'deepseek-coder'
       }
     };
   }
